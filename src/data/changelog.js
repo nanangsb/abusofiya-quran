@@ -35,7 +35,7 @@ export const websitechangelog = [
 			'Here are the highlights of this update:'
 		],
 		updates: [
-			'<span class="font-semibold">Expanded Language Options:</span> Word-by-word translations now available in Chinese, Divehi, French, German, Malayalam, and Persian.',
+			'<span class="font-semibold">Expanded Language Options:</span> Word-by-word translations now available in Chinese, Divehi, French, German and Malayalam.',
 			'<span class="font-semibold">King Fahad Quran Printing Complex Fonts:</span> Includes Tajweed color-coded support based on Dar Al Marifa Easy Quran Mushaf.',
 			'<span class="font-semibold">New Themes and Styles:</span> Fresh themes in Blue, Green, and Sepia, along with enhanced Light and Black themes.',
 			'<span class="font-semibold">Tooltip and Popup Features:</span> Tooltips for word meanings and transliterations.',
