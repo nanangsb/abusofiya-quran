@@ -63,7 +63,7 @@
 	// Load verse key data externally to reduce bundle size
 	$: if ($__quranNavigationModalVisible || ['mushaf', 'morphology'].includes($__currentPage)) {
 		(async () => {
-			const response = await fetch(`${staticEndpoint}/v4/meta/verseKeyData.json`);
+			const response = await fetch(`${staticEndpoint}/meta/verseKeyData.json`);
 			verseKeyData = await response.json();
 		})();
 	}
@@ -114,7 +114,7 @@
 				<!-- instructions -->
 				{#if searchedKey.length === 0}
 					<div class="text-xs pt-2 opacity-70 {$__currentPage === 'home' && 'pb-4'}">
-						To navigate, enter either a {term('chapter').toLowerCase()}, page, or {term('juz')} number. Alternatively, you can use an {term('verse').toLowerCase()} or word key, separated by a colon, period, dash, or a space (e.g., 2:255, 2.286, 18-10, or 2 1 1).
+						Enter a {term('chapter').toLowerCase()}, page, {term('juz').toLowerCase()} number, or {term('verse').toLowerCase()}/word key (e.g., 2:255, 2.286, 18-10, 2 1 1). You can also navigate using surah names (e.g., faatiha, kahf, mary).
 					</div>
 				{/if}
 

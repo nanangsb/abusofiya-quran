@@ -5,6 +5,7 @@
 	import { selectableThemes, themeColors } from '$data/options';
 	import { updateSettings } from '$utils/updateSettings';
 	import { selectedRadioOrCheckboxClasses, linkClasses, individualRadioClasses } from '$data/commonClasses';
+	import { createLink } from '$utils/createLink';
 </script>
 
 <div class="grid gap-3 w-full">
@@ -16,6 +17,10 @@
 					{#if theme.color === color}
 						<Radio name="websiteTheme" bind:group={$__websiteTheme} value={theme.id} on:change={(event) => updateSettings({ type: 'websiteTheme', value: +event.target.value })} custom>
 							<div class="{individualRadioClasses} {$__websiteTheme === theme.id && selectedRadioOrCheckboxClasses}">
+								<!-- <div class="flex flex-row pr-2">
+									<div class="w-4 h-8 rounded-l-full {window.theme('bgMain', theme.id)}"></div>
+									<div class="w-4 h-8 rounded-r-full {window.theme('bgSecondary', theme.id)}"></div>
+								</div> -->
 								<div class="w-full">{theme.name}</div>
 
 								{#if $__websiteTheme === theme.id}
@@ -30,4 +35,4 @@
 	{/each}
 </div>
 
-<div class="text-xs opacity-70">Got a unique color combo in mind that's a visual delight? Shoot your suggestions over to <a class={linkClasses} href="mailto:quranwbw@gmail.com">quranwbw@gmail.com</a>.</div>
+<div class="text-xs opacity-70 pb-8">Got a unique color combo in mind that's a visual delight? Shoot your suggestions over to {@html createLink('mailto:quranwbw@gmail.com', 'quranwbw@gmail.com')}.</div>

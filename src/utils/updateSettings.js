@@ -15,7 +15,7 @@ import {
 	__reciter,
 	__translationReciter,
 	__playbackSpeed,
-	__playTranslation,
+	__audioSettings,
 	__lastRead,
 	__wordTooltip,
 	__userBookmarks,
@@ -26,7 +26,8 @@ import {
 	__quizWrongAnswers,
 	__englishTerminology,
 	__hideNonDuaPart,
-	__playButtonsFunctionality
+	__playButtonsFunctionality,
+	__wordMorphologyOnClick
 } from '$utils/stores';
 // import { uploadSettingsToCloud } from '$utils/cloudSettings';
 
@@ -138,20 +139,15 @@ export function updateSettings(props) {
 			userSettings.audioSettings.playbackSpeed = props.value;
 			break;
 
-		// for play translation toggle
-		case 'playTranslation':
-			__playTranslation.set(props.value);
-			userSettings.audioSettings.playTranslation = props.value;
+		// for audio settings
+		case 'audioSettings':
+			__audioSettings.set(props.value);
+			userSettings.audioSettings = props.value;
 			break;
 
 		// for Initial Setup
 		case 'initialSetupCompleted':
 			userSettings.initialSetupCompleted = props.value;
-			break;
-
-		// for v4 features modal
-		case 'changelogModal':
-			userSettings.oneTimeModals.changelogModal = props.value;
 			break;
 
 		case 'userBookmarks':
@@ -262,6 +258,12 @@ export function updateSettings(props) {
 				toolbar: 1
 			});
 			userSettings.audioSettings.versePlayButton = props.value;
+			break;
+
+		// for toggling word morphology on click
+		case 'wordMorphologyOnClick':
+			__wordMorphologyOnClick.set(props.value);
+			userSettings.displaySettings.wordMorphologyOnClick = props.value;
 			break;
 
 		// for increasing/decreasing font sizes

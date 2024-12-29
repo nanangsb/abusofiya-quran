@@ -7,6 +7,9 @@
 
 	// quick play from first verse of page till the max chapter verses
 	function audioHandler() {
+		$__audioSettings.language = 'arabic';
+		$__audioSettings.playBoth = false;
+
 		if ($__audioSettings.isPlaying) {
 			resetAudioSettings({ location: 'end' });
 		} else {
@@ -29,7 +32,7 @@
 
 		<!-- show badge when a verse is playing -->
 		{#if $__audioSettings.isPlaying && $__audioSettings.audioType === 'verse'}
-			<div class="absolute inline-flex items-center justify-center z-30 text-xs px-2 rounded-3xl -top-3 border {window.theme('bgMain')} {window.theme('border')}">2:255</div>
+			<div class="absolute inline-flex items-center justify-center z-30 text-xs px-2 rounded-3xl -top-3 border {window.theme('bgMain')} {window.theme('border')}">{$__audioSettings.playingKey}</div>
 		{/if}
 	</button>
 </div>

@@ -10,7 +10,7 @@
 	import DotsHorizontal from '$svgs/DotsHorizontal.svelte';
 	import Eye from '$svgs/Eye.svelte';
 	import Tooltip from '$ui/FlowbiteSvelte/tooltip/Tooltip.svelte';
-	import { playVerseAudio, resetAudioSettings, setVersesToPlay, showAudioModal } from '$utils/audioController';
+	import { playVerseAudio, resetAudioSettings, showAudioModal, playButtonHandler, prepareVersesToPlay } from '$utils/audioController';
 	import { __currentPage, __userSettings, __audioSettings, __verseKey, __userNotes, __notesModalVisible, __playButtonsFunctionality, __displayType } from '$utils/stores';
 	import { updateSettings } from '$utils/updateSettings';
 	import { term } from '$utils/terminologies';
@@ -18,7 +18,6 @@
 
 	const chapter = parseInt(key.split(':')[0], 10);
 	const verse = parseInt(key.split(':')[1], 10);
-	const versesInChapter = quranMetaData[chapter].verses;
 	const buttonClasses = `inline-flex items-center justify-center w-10 h-10 transition-colors duration-150 rounded-3xl focus:shadow-outline print:hidden ${window.theme('hover')}`;
 
 	// For chapter page, just show the key, else show the complete chapter transliteration & key
@@ -29,42 +28,32 @@
 
 	function audioHandler(key) {
 		// Stop any audio if something is playing
-		if ($__audioSettings.isPlaying) {
-			resetAudioSettings({ location: 'end' });
-		} else {
-			// For chapter & mushaf page, respect the user select play button functionality
-			if (['chapter', 'mushaf'].includes($__currentPage)) {
-				handleAudioPlayOptions(key);
-			} else {
-				playVerseAudio({ key, language: 'arabic', timesToRepeat: 1 });
+		if ($__audioSettings.isPlaying) return resetAudioSettings({ location: 'end' });
+
+		// For these pages, perform action depending on the play button functionality set by the user
+		if (['chapter', 'mushaf', 'supplications', 'bookmarks', 'juz'].includes($__currentPage)) {
+			switch ($__playButtonsFunctionality.verse) {
+				// Play Verse
+				case 1:
+					prepareVersesToPlay(key);
+					playButtonHandler(key);
+					break;
+				// Show Advance Options
+				case 2:
+					showAudioModal(key);
+					break;
+				// Show Advance Options
+				case 3:
+					showAudioModal(key);
+					break;
+				default:
+					showAudioModal(key);
+					break;
 			}
 		}
-	}
 
-	function handleAudioPlayOptions(key) {
-		const { verse } = $__playButtonsFunctionality;
-
-		switch (verse) {
-			case 1:
-				playVerseAudio({ key, language: 'arabic', timesToRepeat: 1 });
-				break;
-			case 2:
-				setVersesToPlay({
-					location: 'verseOptionsOrModal',
-					chapter,
-					startVerse: verse,
-					endVerse: versesInChapter,
-					audioRange: 'playFromHere'
-				});
-				playVerseAudio({ key: `${window.versesToPlayArray[0]}`, timesToRepeat: 1, language: 'arabic' });
-				break;
-			case 3:
-				showAudioModal(key);
-				break;
-			default:
-				playVerseAudio({ key, language: 'arabic', timesToRepeat: 1 });
-				break;
-		}
+		// For all other pages, just play the audio directly
+		else playVerseAudio({ key, language: 'arabic', timesToRepeat: 1 });
 	}
 
 	// Function to toggle words block for display mode #7
@@ -123,7 +112,7 @@
 			{/if}
 
 			<!-- verses option dropdown -->
-			<button id="verse-options-{verse}" class={buttonClasses} aria-label="Options" on:click={() => __verseKey.set(key)}>
+			<button id="verse-options-{verse}" class={buttonClasses} aria-label="Options" on:mouseenter={__verseKey.set(key)} on:click={__verseKey.set(key)}>
 				<div>
 					<DotsHorizontal size={6} />
 				</div>

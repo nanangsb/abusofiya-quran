@@ -8,7 +8,7 @@
 		<meta name="theme-color" content="#ffffff" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 		<meta name="mobile-web-app-capable" content="yes" />
-		<meta name="description" content="Quran Word By Word Translation, Transliteration And Morphology in English, Urdu, Hindi, Indonesian, Bangla, Turkish, Tamil, French, German, Russian, Ingush, Chinese, Malayalam, Divehi and Persian - QuranWBW.com" />
+		<meta name="description" content="Quran Word By Word Translation, Transliteration And Morphology in English, Urdu, Hindi, Indonesian, Bangla, Turkish, Tamil, French, German, Chinese, Malayalam, Divehi and Persian - QuranWBW.com" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="preload" href="%sveltekit.assets%/fonts/hafs/uthmanic_hafs_v22.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="%sveltekit.assets%/fonts/indopak/AlQuranIndoPakv5byQuranWBW.com-Regular.woff2" as="font" type="font/woff2" crossorigin />
@@ -16,7 +16,7 @@
 		<link crossorigin="anonymous" rel="manifest" href="%sveltekit.assets%/manifest.json" />
 		<link crossorigin="anonymous" rel="icon" type="image/png" href="%sveltekit.assets%/images/favicon.png" />
 		<link crossorigin="anonymous" href="%sveltekit.assets%/images/apple-touch-icon.png" rel="apple-touch-icon" />
-		<link crossorigin="anonymous" rel="stylesheet" href="%sveltekit.assets%/css/global.css?version=35" />
+		<link crossorigin="anonymous" rel="stylesheet" href="%sveltekit.assets%/css/global.css?version=36" />
 
 		<!-- 
 		If the user's browser do not support Optional chaining (?.), redirect to old v3 website
@@ -47,11 +47,11 @@
 				9: 'bg-[#09090b]'
 			};
 
-			function theme(type) {
-				try {
-					const userSettings = JSON.parse(localStorage.getItem('userSettings'));
-					const currentTheme = userSettings ? +userSettings.displaySettings.websiteTheme : 1;
+			const userSettings = JSON.parse(localStorage.getItem('userSettings'));
+			const usersTheme = userSettings ? +userSettings.displaySettings.websiteTheme : 1;
 
+			function theme(type, id = usersTheme) {
+				try {
 					const themes = {
 						1: {
 							themeName: 'Golden Glint',
@@ -226,7 +226,7 @@
 						}
 					};
 
-					return themes[currentTheme][type] || '';
+					return themes[id][type] || '';
 				} catch (error) {
 					console.error('An error occurred while fetching the theme:', error);
 					return '';

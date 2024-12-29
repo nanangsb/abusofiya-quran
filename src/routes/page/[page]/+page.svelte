@@ -2,6 +2,7 @@
 	export let data;
 
 	import Bismillah from '$display/Bismillah.svelte';
+	import ChapterHeader from '$display/ChapterHeader.svelte';
 	import PageHead from '$misc/PageHead.svelte';
 	import WordsBlock from '$display/verses/WordsBlock.svelte';
 	import Spinner from '$svgs/Spinner.svelte';
@@ -11,16 +12,15 @@
 	import { goto } from '$app/navigation';
 	import { __chapterNumber, __pageNumber, __currentPage, __fontType, __wordTranslation, __mushafPageDivisions, __lastRead, __displayType, __topNavbarVisible, __bottomToolbarVisible, __mushafMinimalModeEnabled } from '$utils/stores';
 	import { updateSettings } from '$utils/updateSettings';
-	import { apiEndpoint, apiVersion, errorLoadingDataMessage, mushafWordFontLink, mushafHeaderFontLink, mushafFontVersion } from '$data/websiteSettings';
-	import { quranMetaData, chapterHeaderCodes } from '$data/quranMeta';
+	import { apiEndpoint, apiVersion, errorLoadingDataMessage, mushafWordFontLink, mushafFontVersion } from '$data/websiteSettings';
+	import { quranMetaData } from '$data/quranMeta';
 	import { selectableFontTypes } from '$data/options';
-	import { loadFont } from '$utils/loadFont';
 	import { toggleMushafMinimalMode } from '$utils/toggleMushafMinimalMode';
 	import { splitDelimiter } from '$data/websiteSettings';
 	import '$lib/swiped-events.min.js';
 
 	// Lines to be centered instead of justified
-	const centeredPageLines = ['528:9', '594:5', '602:5', '602:15', '603:10', '603:15', '604:4', '604:9', '604:14', '604:15'];
+	const centeredPageLines = ['528:9', '545:6', '594:5', '602:5', '602:15', '603:10', '603:15', '604:4', '604:9', '604:14', '604:15'];
 
 	let pageData;
 	let startingLine;
@@ -33,14 +33,14 @@
 	$: page = +data.page;
 
 	// Prefetch adjacent pages for better UX
-	$: {
-		if ([2, 3].includes($__fontType)) {
-			for (let thisPage = +page - 2; thisPage <= +page + 2; thisPage++) {
-				fetch(`${mushafWordFontLink}/QCF4${`00${thisPage}`.slice(-3)}_COLOR-Regular.woff?version=${mushafFontVersion}`);
-				fetch(`${apiEndpoint}/page?page=${thisPage}&word_type=${selectableFontTypes[$__fontType].apiId}&word_translation=${$__wordTranslation}&version=${apiVersion}`);
-			}
-		}
-	}
+	// $: {
+	// 	if ([2, 3].includes($__fontType)) {
+	// 		for (let thisPage = +page - 2; thisPage <= +page + 2; thisPage++) {
+	// 			fetch(`${mushafWordFontLink}/QCF4${`00${thisPage}`.slice(-3)}_COLOR-Regular.woff?version=${mushafFontVersion}`);
+	// 			fetch(`${apiEndpoint}/page?page=${thisPage}&word_type=${selectableFontTypes[$__fontType].apiId}&word_translation=${$__wordTranslation}&version=${apiVersion}`);
+	// 		}
+	// 	}
+	// }
 
 	// Fetching the page data from API
 	$: {
@@ -92,11 +92,6 @@
 			pageBlock.addEventListener('swiped-left', () => goto(`/page/${page === 1 ? 1 : page - 1}`, { replaceState: false }));
 			pageBlock.addEventListener('swiped-right', () => goto(`/page/${page === 604 ? 604 : page + 1}`, { replaceState: false }));
 
-			// Dynamically load header font
-			loadFont('chapter-headers', `${mushafHeaderFontLink}?version=${mushafFontVersion}`).then(() => {
-				document.querySelectorAll('.header').forEach((element) => element.classList.remove('invisible'));
-			});
-
 			return apiData;
 		})();
 
@@ -125,8 +120,7 @@
 					<!-- if it's the first verse of a chapter -->
 					{#if chapters.length > 0 && lines.includes(line) && verses[lines.indexOf(line)] === 1}
 						<div class="flex flex-col my-2">
-							<div style="font-family: chapter-headers" class="header invisible leading-base pt-4 md:pt-8 pb-6 text-[28vw] md:text-[195px] lg:text-[195px] custom-header-color">{chapterHeaderCodes[chapters[lines.indexOf(line)]]}</div>
-
+							<ChapterHeader chapter={chapters[lines.indexOf(line)]} />
 							<Bismillah {chapters} {lines} {line} />
 						</div>
 					{/if}

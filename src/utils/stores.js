@@ -25,7 +25,6 @@ let __websiteOnline,
 	__translationReciter,
 	__timestampData,
 	__playbackSpeed,
-	__playTranslation,
 	__displayType,
 	__selectedDisplayId,
 	__websiteTheme,
@@ -55,6 +54,7 @@ let __websiteOnline,
 	__changelogModalVisible,
 	__verseTranslationModalVisible,
 	__morphologyModalVisible,
+	__copyShareVerseModalVisible,
 	__wakeLockEnabled,
 	__quizCorrectAnswers,
 	__quizWrongAnswers,
@@ -63,7 +63,9 @@ let __websiteOnline,
 	__hideNonDuaPart,
 	__wordRoot,
 	__playButtonsFunctionality,
-	__mushafMinimalModeEnabled;
+	__mushafMinimalModeEnabled,
+	__keysToFetch,
+	__wordMorphologyOnClick;
 
 if (browser) {
 	const userSettings = JSON.parse(localStorage.getItem('userSettings'));
@@ -138,9 +140,6 @@ if (browser) {
 	// to store playback speed
 	__playbackSpeed = writable(userSettings.audioSettings.playbackSpeed);
 
-	// to store the toggle boolean for play translation
-	__playTranslation = writable(userSettings.audioSettings.playTranslation);
-
 	// to store the display type - WBW, Normal, Continuous, etc...
 	__displayType = writable(userSettings.displaySettings.displayType);
 	__selectedDisplayId = writable(1);
@@ -172,19 +171,8 @@ if (browser) {
 	// to store the word tooltip type
 	__wordTooltip = writable(userSettings.displaySettings.wordTooltip);
 
-	// to store the bottom alert info
-	__bottomAlert = writable({
-		visible: false,
-		message: '...'
-	});
-
 	// to store all the audio settings
-	__audioSettings = writable({
-		isPlaying: false,
-		timesToRepeat: 1,
-		timesRepeated: 0,
-		delay: 0
-	});
+	__audioSettings = writable(userSettings.audioSettings);
 
 	// to store the morphology verse/word key
 	__morphologyKey = writable(null);
@@ -216,6 +204,7 @@ if (browser) {
 	__changelogModalVisible = writable(false);
 	__verseTranslationModalVisible = writable(false);
 	__morphologyModalVisible = writable(false);
+	__copyShareVerseModalVisible = writable(false);
 
 	// wake lock settings
 	__wakeLockEnabled = writable(userSettings.displaySettings.wakeLockEnabled);
@@ -247,6 +236,12 @@ if (browser) {
 
 	// used to hide elements on pinch
 	__mushafMinimalModeEnabled = writable(false);
+
+	// storing the total keys to fetch by Individual component
+	__keysToFetch = writable(null);
+
+	// what happens when a user clicks on a word
+	__wordMorphologyOnClick = writable(userSettings.displaySettings.wordMorphologyOnClick);
 }
 
 export {
@@ -274,7 +269,6 @@ export {
 	__translationReciter,
 	__timestampData,
 	__playbackSpeed,
-	__playTranslation,
 	__displayType,
 	__selectedDisplayId,
 	__websiteTheme,
@@ -304,6 +298,7 @@ export {
 	__changelogModalVisible,
 	__verseTranslationModalVisible,
 	__morphologyModalVisible,
+	__copyShareVerseModalVisible,
 	__wakeLockEnabled,
 	__quizCorrectAnswers,
 	__quizWrongAnswers,
@@ -312,5 +307,7 @@ export {
 	__hideNonDuaPart,
 	__wordRoot,
 	__playButtonsFunctionality,
-	__mushafMinimalModeEnabled
+	__mushafMinimalModeEnabled,
+	__keysToFetch,
+	__wordMorphologyOnClick
 };

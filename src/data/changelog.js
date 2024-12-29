@@ -1,8 +1,23 @@
-import { linkClasses } from '$data/commonClasses';
+import { createLink } from '$utils/createLink';
 
-export const websiteChangelogs = [
+export const websitechangelog = [
 	{
-		version: 'v4.0.1',
+		version: '4.1',
+		date: 'Dec 29, 2024',
+		description: [
+			`In this update, we’ve enhanced audio playback with translation support and settings memory, introduced new reciters Ayman Suwayd and Ibrahim Al Akhdar, added custom chapter slugs for easy navigation, enabled simple Arabic verse copying, ensured verse translations display in your selected order, and added a button to listen to a word directly on the morphology page. Enjoy these fantastic enhancements!`
+		],
+		updates: [
+			'<span class="font-semibold">Enhanced Audio Modal:</span> Now allows translation playback and remembers your settings. Say goodbye to repetitive adjustments!',
+			'<span class="font-semibold">New Reciters:</span> We are excited to welcome Ayman Suwayd and Ibrahim Al Akhdar. Enjoy their melodious recitations!',
+			`<span class="font-semibold">Custom Chapter Slugs:</span> Jump to any chapter using their translated, transliterated, or Arabic names. For example: ${createLink('https://quranwbw.com/cave', 'quranwbw.com/cave')}, ${createLink('https://quranwbw.com/yaseen', 'quranwbw.com/yaseen')}, ${createLink('https://quranwbw.com/هود', 'quranwbw.com/هود')}, ${createLink('https://quranwbw.com/baqarah', 'quranwbw.com/baqarah')}...`,
+			'<span class="font-semibold">Effortless Verse Copying:</span> Added an option to copy Arabic verse text effortlessly. Perfect for sharing and making notes!',
+			'<span class="font-semibold">Ordered Verse Translations:</span> Display verse translations in the sequence you selected. Enjoy a seamless reading experience!',
+			'<span class="font-semibold">Morphology Page Audio:</span> Added a button to listen to a word directly on the morphology page for enhanced learning and pronunciation.'
+		]
+	},
+	{
+		version: '4.0.1',
 		title: 'Shine with Golden Glint',
 		date: 'Dec 7, 2024',
 		description: [
@@ -11,16 +26,16 @@ export const websiteChangelogs = [
 		]
 	},
 	{
-		version: 'v4.0',
+		version: '4.0',
 		title: 'Introducing QuranWBW v4.0',
 		date: 'Dec 2, 2024',
 		description: [
 			'Alhamdulillah, we are thrilled to announce the release of QuranWBW v4, featuring a completely redesigned website with significant performance enhancements and a multitude of new and improved features.',
-			`We hope you enjoy the new and improved QuranWBW experience! In case you'd still like to use the old website, you may visit <a class="${linkClasses}" target="_blank" rel="noreferrer" href="https://old.quranwbw.com">old.quranwbw.com</a>.`,
+			`We hope you enjoy the new and improved QuranWBW experience! In case you'd still like to use the old website, you may visit ${createLink('https://old.quranwbw.com', 'old.quranwbw.com')}.`,
 			'Here are the highlights of this update:'
 		],
 		updates: [
-			'<span class="font-semibold">Expanded Language Options:</span> Word-by-word translations now available in Chinese, Divehi, French, German, Ingush, Malayalam, Persian and Russian.',
+			'<span class="font-semibold">Expanded Language Options:</span> Word-by-word translations now available in Chinese, Divehi, French, German, Malayalam, and Persian.',
 			'<span class="font-semibold">King Fahad Quran Printing Complex Fonts:</span> Includes Tajweed color-coded support based on Dar Al Marifa Easy Quran Mushaf.',
 			'<span class="font-semibold">New Themes and Styles:</span> Fresh themes in Blue, Green, and Sepia, along with enhanced Light and Black themes.',
 			'<span class="font-semibold">Tooltip and Popup Features:</span> Tooltips for word meanings and transliterations.',

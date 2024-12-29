@@ -8,9 +8,7 @@
 	import VerseTranslationSelector from '$ui/SettingsDrawer/VerseTranslationSelector.svelte';
 	import VerseTransliterationSelector from '$ui/SettingsDrawer/VerseTransliterationSelector.svelte';
 	import VerseTafsirSelector from '$ui/SettingsDrawer/VerseTafsirSelector.svelte';
-	import VerseRecitorSelector from '$ui/SettingsDrawer/VerseRecitorSelector.svelte';
-	import TranslationRecitorSelector from '$ui/SettingsDrawer/TranslationRecitorSelector.svelte';
-	import PlaybackSpeedSelector from '$ui/SettingsDrawer/PlaybackSpeedSelector.svelte';
+	import VerseReciterSelector from '$ui/SettingsDrawer/VerseReciterSelector.svelte';
 	import VersePlayButtonSelector from '$ui/SettingsDrawer/VersePlayButtonSelector.svelte';
 	import Drawer from '$ui/FlowbiteSvelte/drawer/Drawer.svelte';
 	import Range from '$ui/FlowbiteSvelte/forms/Range.svelte';
@@ -33,7 +31,6 @@
 		__reciter,
 		__translationReciter,
 		__playbackSpeed,
-		__playTranslation,
 		__userSettings,
 		__wordTooltip,
 		__settingsDrawerHidden,
@@ -41,7 +38,8 @@
 		__englishTerminology,
 		__lastRead,
 		__hideNonDuaPart,
-		__playButtonsFunctionality
+		__playButtonsFunctionality,
+		__wordMorphologyOnClick
 	} from '$utils/stores';
 
 	import { selectableDisplays, selectableFontTypes, selectableThemes, selectableWordTranslations, selectableWordTransliterations, selectableVerseTransliterations, selectableReciters, selectableTranslationReciters, selectablePlaybackSpeeds, selectableTooltipOptions, selectableFontSizes, fontSizePresets, selectableVersePlayButtonOptions } from '$data/options';
@@ -66,9 +64,7 @@
 		'verse-translation': VerseTranslationSelector,
 		'verse-transliteration': VerseTransliterationSelector,
 		'verse-tafsir': VerseTafsirSelector,
-		'verse-reciter': VerseRecitorSelector,
-		'translation-reciter': TranslationRecitorSelector,
-		'playback-speed': PlaybackSpeedSelector,
+		'verse-reciter': VerseReciterSelector,
 		'verse-play-button': VersePlayButtonSelector
 	};
 
@@ -107,9 +103,10 @@
 	// Calculate maximum allowed font size based on breakpoint
 	$: maxFontSizeAllowed = ['default', 'sm'].includes(getTailwindBreakpoint()) ? 9 : 12;
 
-	// Get translation and transliteration keys
+	// Get keys
 	$: wordTranslationKey = Object.keys(selectableWordTranslations).find((item) => selectableWordTranslations[item].id === $__wordTranslation);
 	$: wordTransliterationKey = Object.keys(selectableWordTransliterations).find((item) => selectableWordTransliterations[item].id === $__wordTransliteration);
+	$: verseReciterKey = Object.keys(selectableReciters).find((item) => selectableReciters[item].id === $__reciter);
 
 	// Hide settings drawer and go back to main settings on certain conditions
 	$: if ($__currentPage || $__settingsDrawerHidden) goBackToMainSettings();
@@ -212,7 +209,7 @@
 					<div class="border-b {window.theme('border')}"></div>
 
 					<!-- display-type-setting -->
-					<div id="display-type-setting" class="{settingsBlockClasses} {!['chapter', 'mushaf', 'supplications', 'bookmarks', 'morphology', 'search'].includes($__currentPage) && disabledClasses}">
+					<div id="display-type-setting" class={settingsBlockClasses}>
 						<div class="flex flex-row justify-between items-center">
 							<div class="block">Display Type</div>
 							<button class={selectorClasses} on:click={() => gotoIndividualSetting('display-type')}>{selectableDisplays[$__selectedDisplayId].displayName}</button>
@@ -410,20 +407,9 @@
 					<div id="verse-reciter-setting" class={settingsBlockClasses}>
 						<div class="flex flex-row justify-between items-center">
 							<div class="block">{term('verse')} Reciter</div>
-							<button class={selectorClasses} on:click={() => gotoIndividualSetting('verse-reciter')}>{selectableReciters[$__reciter].reciter}</button>
+							<button class={selectorClasses} on:click={() => gotoIndividualSetting('verse-reciter')}>{selectableReciters[verseReciterKey].reciter}</button>
 						</div>
-						<p class={settingsDescriptionClasses}>The reciter whose audio will be played when you choose to listen to a {term('verse')}.</p>
-					</div>
-
-					<div class="border-b {window.theme('border')}"></div>
-
-					<!-- translation-reciter-setting -->
-					<div id="translation-reciter-setting" class={settingsBlockClasses}>
-						<div class="flex flex-row justify-between items-center">
-							<div class="block">Translation Reciter</div>
-							<button class={selectorClasses} on:click={() => gotoIndividualSetting('translation-reciter')}>{selectableTranslationReciters[$__translationReciter].reciter}</button>
-						</div>
-						<p class={settingsDescriptionClasses}>The translation reciter whose audio will be played after the {term('verse')} audio.</p>
+						<p class={settingsDescriptionClasses}>The reciter's voice that will play when you choose to listen to an {term('verse')}.</p>
 					</div>
 
 					<div class="border-b {window.theme('border')}"></div>
@@ -431,25 +417,11 @@
 					<!-- playback-speed-setting -->
 					<div id="playback-speed-setting" class={settingsBlockClasses}>
 						<div class="flex flex-col justify-between space-y-4">
-							<span class="block">Playback Speed ({selectablePlaybackSpeeds[playbackSpeedValue].speed})</span>
+							<span class="block">Playback Speed (x{selectablePlaybackSpeeds[playbackSpeedValue].speed})</span>
 							<div class="flex flex-col space-y-2 rounded-3xl w-full" role="group">
 								<Range min="1" max="7" bind:value={playbackSpeedValue} class={rangeClasses} />
 							</div>
 						</div>
-					</div>
-
-					<div class="border-b {window.theme('border')}"></div>
-
-					<!-- play-translation-setting -->
-					<div id="play-translation-setting" class={settingsBlockClasses}>
-						<div class="flex flex-row justify-between items-center">
-							<span class="block">Play Translation</span>
-							<label class="inline-flex items-center cursor-pointer {$__wordTranslationEnabled === false && disabledClasses}">
-								<input type="checkbox" value="" class="sr-only peer" checked={$__playTranslation} on:click={(event) => updateSettings({ type: 'playTranslation', value: event.target.checked })} />
-								<div class={toggleBtnClasses}></div>
-							</label>
-						</div>
-						<p class={settingsDescriptionClasses}>Whether the translation audio should be played after the Arabic audio.</p>
 					</div>
 
 					<div class="border-b {window.theme('border')}"></div>
@@ -495,6 +467,20 @@
 						</div>
 						<p class={settingsDescriptionClasses}>Show/hide the non-{term('supplications')} words in the {term('supplications')} page.</p>
 					</div>
+
+					<!-- <div class="border-b {window.theme('border')}"></div> -->
+
+					<!-- show-morphology-on-word-click-toggle -->
+					<!-- <div id="show-morphology-on-word-click" class={settingsBlockClasses}>
+						<div class="flex flex-row justify-between items-center">
+							<span class="block">Word Morphology On Click</span>
+							<label class="inline-flex items-center cursor-pointer">
+								<input type="checkbox" value="" class="sr-only peer" checked={$__wordMorphologyOnClick} on:click={(event) => updateSettings({ type: 'wordMorphologyOnClick', value: event.target.checked })} />
+								<div class={toggleBtnClasses}></div>
+							</label>
+						</div>
+						<p class={settingsDescriptionClasses}>Enable this option to view morphology on word click, instead of playing audio.</p>
+					</div> -->
 				</div>
 			</div>
 

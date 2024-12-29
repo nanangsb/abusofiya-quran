@@ -1,19 +1,19 @@
 <script>
+	export let key;
+	export let value;
+	export let line = null;
+	export let exampleVerse = false;
+
 	import VerseOptionsDropdown from '$display/verses/VerseOptionsDropdown.svelte';
 	import Word from '$display/verses/Word.svelte';
 	import Tooltip from '$ui/FlowbiteSvelte/tooltip/Tooltip.svelte';
 	import { goto } from '$app/navigation';
 	import { selectableDisplays } from '$data/options';
-	import { __currentPage, __fontType, __displayType, __userSettings, __audioSettings, __morphologyKey, __verseKey, __websiteTheme, __morphologyModalVisible } from '$utils/stores';
+	import { __currentPage, __fontType, __displayType, __userSettings, __audioSettings, __morphologyKey, __verseKey, __websiteTheme, __morphologyModalVisible, __wordMorphologyOnClick } from '$utils/stores';
 	import { loadFont } from '$utils/loadFont';
 	import { wordAudioController } from '$utils/audioController';
 	import { updateSettings } from '$utils/updateSettings';
 	import { mushafWordFontLink, mushafFontVersion } from '$data/websiteSettings';
-
-	export let key;
-	export let value;
-	export let line = null;
-	export let exampleVerse = false;
 
 	const fontSizes = JSON.parse($__userSettings).displaySettings.fontSizes;
 	$: displayIsContinuous = selectableDisplays[$__displayType].continuous;
@@ -40,7 +40,7 @@
 		}
 
 		// If the user clicks on a word in a non-Morphology page
-		// else if ($__currentPage !== 'morphology' && props.type === 'word') {
+		// else if ($__currentPage !== 'morphology' && props.type === 'word' && $__wordMorphologyOnClick) {
 		// 	__morphologyKey.set(props.key);
 		// 	__morphologyModalVisible.set(true);
 		// }
@@ -104,7 +104,7 @@
 
 <!-- words -->
 {#each { length: value.meta.words } as _, word}
-	<Word {value} {word} {key} {line} {wordClickHandler} {wordAndEndIconCommonClasses} {wordSpanClasses} {v4hafsClasses} {exampleVerse} />
+	<Word {value} {word} {key} {line} {wordClickHandler} {wordAndEndIconCommonClasses} {wordSpanClasses} {v4hafsClasses} />
 {/each}
 
 <!-- end icon -->
