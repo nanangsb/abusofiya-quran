@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import { __fontType, __chapterData, __verseTranslationData, __wordTranslation, __wordTransliteration, __verseTranslations, __timestampData } from '$utils/stores';
-import { apiEndpoint, staticEndpoint, apiVersion } from '$data/websiteSettings';
+import { apiEndpoint, staticEndpoint, apiVersion, apiByPassCache } from '$data/websiteSettings';
 import { selectableFontTypes } from '$data/options';
 
 // Fetch specific verses (startVerse to endVerse) and then fetch the complete chapter data to be cached by the user's browser
@@ -18,7 +18,8 @@ export async function fetchChapterData(props) {
 			word_translation: wordTranslation,
 			word_transliteration: wordTransliteration,
 			verse_translation: '1,3',
-			version: apiVersion
+			version: apiVersion,
+			bypass_cache: apiByPassCache
 		});
 
 	// Fetch and set the data in store if the user is on the chapter page
@@ -64,7 +65,8 @@ export async function fetchVersesData(props) {
 			word_translation: props.wordTranslation,
 			word_transliteration: props.wordTransliteration,
 			verse_translation: '1,3',
-			version: apiVersion
+			version: apiVersion,
+			bypass_cache: apiByPassCache
 		});
 
 	const response = await fetch(apiURL);

@@ -6,9 +6,11 @@ export const websiteTitle = `Quran ${websiteTagline} - ${websiteURL}`;
 
 export const wbwLanguages = 'English, Urdu, Hindi, Indonesian, Bangla, Turkish, Tamil, French, German, Chinese, Malayalam and Divehi';
 
-export const apiVersion = 131;
+export const apiVersion = 132;
 
 export const useLocalAPI = false;
+
+export const apiByPassCache = false; // If true, api response will not be cached by Cloudflare
 
 export const apiEndpoint = useLocalAPI ? 'http://localhost:7500/v1' : 'https://api.quranwbw.com/v1';
 

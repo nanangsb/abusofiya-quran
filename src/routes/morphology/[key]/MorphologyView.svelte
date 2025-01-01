@@ -5,7 +5,7 @@
 	import WordsBlock from '$display/verses/WordsBlock.svelte';
 	import Table from './Table.svelte';
 	import { quranMetaData } from '$data/quranMeta';
-	import { apiEndpoint, errorLoadingDataMessage } from '$data/websiteSettings';
+	import { apiEndpoint, apiVersion, apiByPassCache, errorLoadingDataMessage } from '$data/websiteSettings';
 	import { __currentPage, __fontType, __wordTranslation, __verseTranslations, __wordTransliteration, __morphologyKey, __lexiconModalVisible, __wordRoot } from '$utils/stores';
 	import { buttonClasses, buttonOutlineClasses } from '$data/commonClasses';
 	import { fetchVersesData } from '$utils/fetchData';
@@ -40,7 +40,7 @@
 	$: {
 		fetchWordsData = (async () => {
 			try {
-				const response = await fetch(`${apiEndpoint}/morphology?words=${$__morphologyKey}&word_translation=${$__wordTranslation}`);
+				const response = await fetch(`${apiEndpoint}/morphology?words=${$__morphologyKey}&word_translation=${$__wordTranslation}&version=${apiVersion}&bypass_cache=${apiByPassCache}`);
 				const data = await response.json();
 				// fetchWordsData1 = data.data;
 				return data.data;
@@ -53,7 +53,7 @@
 		// Fetch word summary data
 		fetchWordSummary = (async () => {
 			try {
-				const response = await fetch(`${apiEndpoint}/morphology/summary?word=${$__morphologyKey}&version=2`);
+				const response = await fetch(`${apiEndpoint}/morphology/summary?word=${$__morphologyKey}&version=${apiVersion}&bypass_cache=${apiByPassCache}`);
 				const data = await response.json();
 				return data.data;
 			} catch (error) {
