@@ -66,7 +66,7 @@
 			{#await verseTransliterationData}
 				<Skeleton size="xxl" class="mb-2.5" />
 			{:then verseTransliterationData}
-				{#if verseTransliterationData}
+				<!-- {#if verseTransliterationData}
 					{#if $__verseTranslations.includes(1)}
 						<Layout verseTranslationID={1} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[0]} {key} {value} />
 					{/if}
@@ -74,7 +74,7 @@
 					{#if $__verseTranslations.includes(3)}
 						<Layout verseTranslationID={3} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[1]} {key} {value} />
 					{/if}
-				{/if}
+				{/if} -->
 			{:catch error}
 				<p>{error}</p>
 			{/await}

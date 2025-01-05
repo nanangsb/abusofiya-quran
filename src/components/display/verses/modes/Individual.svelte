@@ -152,7 +152,7 @@
 		results.forEach((data, i) => {
 			const index = startIndex + i;
 			const key = keysArray[index];
-			dataMap[key] = data[key];
+			dataMap[key] = data;
 		});
 	}
 

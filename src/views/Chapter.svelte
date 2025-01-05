@@ -42,15 +42,13 @@
 		}
 
 		// Fetch chapter data from API
-		chapterData = fetchChapterData({ chapter: $__chapterNumber });
+		chapterData = fetchChapterData({
+			chapter: $__chapterNumber,
+			reRenderWhenTheseUpdates: [$__pageURL, $__displayType, $__fontType, $__wordTranslation, $__wordTransliteration]
+		});
 
 		// Update the first verse on page
 		__firstVerseOnPage.set(startVerse);
-
-		// Check for store updates (page URL, display type, font type, word translation, transliteration)
-		if ($__pageURL || $__displayType || $__fontType || $__wordTranslation || $__wordTransliteration) {
-			// Do nothing except re-run the block
-		}
 	}
 
 	// Fetch verse translation data if necessary
