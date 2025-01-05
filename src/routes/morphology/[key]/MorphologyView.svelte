@@ -99,7 +99,7 @@
 	{/if}
 
 	<div id="verse">
-		{#key verse}
+		{#key verse || word}
 			{#await fetchVerseData}
 				<Spinner />
 			{:then fetchVerseData}
