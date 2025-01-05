@@ -8,7 +8,7 @@
 	import { apiEndpoint, apiVersion, apiByPassCache, errorLoadingDataMessage } from '$data/websiteSettings';
 	import { __currentPage, __fontType, __wordTranslation, __verseTranslations, __wordTransliteration, __morphologyKey, __lexiconModalVisible, __wordRoot } from '$utils/stores';
 	import { buttonClasses, buttonOutlineClasses } from '$data/commonClasses';
-	import { fetchVersesData } from '$utils/fetchData';
+	import { fetchChapterData } from '$utils/fetchData';
 	import { term } from '$utils/terminologies';
 	import { wordAudioController } from '$utils/audioController';
 
@@ -27,8 +27,8 @@
 	}
 
 	// Fetch verse data based on chapter and verse
-	$: fetchData = fetchVersesData({
-		verses: `${chapter}:${verse}`,
+	$: fetchVerseData = fetchChapterData({
+		chapter: chapter,
 		fontType: $__fontType,
 		wordTranslation: $__wordTranslation,
 		wordTransliteration: $__wordTransliteration,
@@ -99,17 +99,17 @@
 	{/if}
 
 	<div id="verse">
-		{#await fetchData}
-			<Spinner />
-		{:then fetchData}
-			<div class="flex flex-wrap justify-center direction-rtl">
-				{#each Object.entries(fetchData) as [key, value]}
-					<WordsBlock {key} {value} />
-				{/each}
-			</div>
-		{:catch error}
-			<p>{errorLoadingDataMessage}</p>
-		{/await}
+		{#key verse}
+			{#await fetchVerseData}
+				<Spinner />
+			{:then fetchVerseData}
+				<div class="flex flex-wrap justify-center direction-rtl">
+					<WordsBlock key={`${chapter}:${verse}`} value={fetchVerseData} />
+				</div>
+			{:catch error}
+				<p>{errorLoadingDataMessage}</p>
+			{/await}
+		{/key}
 	</div>
 
 	<div id="word-summary" class="text-center mx-auto md:w-3/4 text-sm pb-6 border-b-2 {window.theme('border')} md:text-lg">

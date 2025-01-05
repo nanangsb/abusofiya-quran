@@ -151,7 +151,7 @@ export async function fetchChapterData(props) {
 			transliteration: transliterationData.data
 		};
 
-		__chapterData.set(wordsData);
+		if (!props.skipSave) __chapterData.set(wordsData);
 		return wordsData;
 	} catch (error) {
 		console.error('Error fetching chapter data:', error);
