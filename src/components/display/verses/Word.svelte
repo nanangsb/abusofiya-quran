@@ -8,6 +8,11 @@
 	export let wordSpanClasses;
 	export let v4hafsClasses;
 
+	const verseArabicWordsData = value.arabic[key.split(':')[1]].words;
+	const verseTranslationWordsData = value.translation[key.split(':')[1]].words;
+	const verseTransliterationWordsData = value.transliteration[key.split(':')[1]].words;
+	const verseMetaData = value.meta[key.split(':')[1]].meta;
+
 	import Tooltip from '$ui/FlowbiteSvelte/tooltip/Tooltip.svelte';
 	// import Popover from '$ui/FlowbiteSvelte/popover/Popover.svelte';
 	// import Spinner from '$svgs/Spinner.svelte';
@@ -22,9 +27,6 @@
 	const verse = key.split(':')[1];
 	const wordKey = `${chapter}:${verse}:${word + 1}`;
 	const fontSizes = JSON.parse($__userSettings).displaySettings.fontSizes;
-	const arabicSplit = value.words.arabic.split(splitDelimiter);
-	const transliterationSplit = value.words.transliteration.split(splitDelimiter);
-	const translationSplit = value.words.translation.split(splitDelimiter);
 	const v4PopoverEnabled = false;
 
 	// fix for Ba'da Ma Ja'aka for page 254
@@ -72,15 +74,15 @@
 		<span class={wordSpanClasses} data-fontSize={fontSizes.arabicText}>
 			<!-- 1: Uthmanic Hafs Digital, 3: Indopak Madinah -->
 			{#if [1, 4].includes($__fontType)}
-				{arabicSplit[word]}
+				{verseArabicWordsData[word]}
 				<!-- 2: Uthmanic Hafs Mushaf -->
 			{:else if [2, 3].includes($__fontType)}
-				<span id="word-{wordKey.split(':')[1]}-{wordKey.split(':')[2]}" style="font-family: p{value.meta.page}" class={v4hafsClasses}>
+				<span id="word-{wordKey.split(':')[1]}-{wordKey.split(':')[2]}" style="font-family: p{verseMetaData.page}" class={v4hafsClasses}>
 					<!-- word fix, see fixedMushafWords -->
 					{#if fixedMushafWords.hasOwnProperty(wordKey)}
 						{fixedMushafWords[wordKey]}
 					{:else}
-						{arabicSplit[word]}
+						{verseArabicWordsData[word]}
 					{/if}
 				</span>
 			{/if}
@@ -89,8 +91,8 @@
 		<!-- word translation and transliteration, only for wbw modes -->
 		{#if [1, 3, 7].includes($__displayType)}
 			<div class={wordTranslationClasses} data-fontSize={fontSizes.wordTranslationText}>
-				<span class="leading-normal {$__wordTransliterationEnabled ? 'block' : 'hidden'}">{transliterationSplit[word]}</span>
-				<span class="leading-normal {$__wordTranslation === 2 && 'font-Urdu'} {$__wordTranslationEnabled ? 'block' : 'hidden'}">{translationSplit[word]}</span>
+				<span class="leading-normal {$__wordTransliterationEnabled ? 'block' : 'hidden'}">{verseTransliterationWordsData[word]}</span>
+				<span class="leading-normal {$__wordTranslation === 2 && 'font-Urdu'} {$__wordTranslationEnabled ? 'block' : 'hidden'}">{verseTranslationWordsData[word]}</span>
 			</div>
 		{/if}
 	</div>
@@ -123,11 +125,11 @@
 	{#if $__wordTooltip > 1}
 		<Tooltip arrow={false} type="light" class="z-30 hidden md:block text-center inline-flex font-sans font-normal">
 			{#if $__wordTooltip === 2}
-				{@html transliterationSplit[word]}
+				{@html verseTransliterationWordsData[word]}
 			{:else if $__wordTooltip === 3}
-				{@html translationSplit[word]}
+				{@html verseTranslationWordsData[word]}
 			{:else if $__wordTooltip === 4}
-				{@html `<div class="flex flex-col">${transliterationSplit[word]} <div class="border-t"></div> ${translationSplit[word]}</div>`}
+				{@html `<div class="flex flex-col">${verseTransliterationWordsData[word]} <div class="border-t"></div> ${verseTranslationWordsData[word]}</div>`}
 			{/if}
 		</Tooltip>
 	{/if}

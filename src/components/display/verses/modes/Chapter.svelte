@@ -67,7 +67,7 @@
 
 {#if $__currentPage === 'chapter' && $__chapterData}
 	{#each Array.from(Array(endVerse + 1).keys()).slice(startVerse) as verse}
-		<svelte:component this={displayComponents[JSON.parse($__userSettings).displaySettings.displayType].component} key={`${$__chapterNumber}:${verse}`} value={$__chapterData[`${$__chapterNumber}:${verse}`]} />
+		<svelte:component this={displayComponents[JSON.parse($__userSettings).displaySettings.displayType].component} key={`${$__chapterNumber}:${verse}`} value={$__chapterData} />
 	{/each}
 
 	<!-- if the verses are being shown to the user in a modal/drawer, then do not show the loadNextVersesButton -->

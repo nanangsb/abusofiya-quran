@@ -4,6 +4,9 @@
 	export let line = null;
 	export let exampleVerse = false;
 
+	const verseArabicEndData = value.arabic[key.split(':')[1]].end;
+	const verseMetaData = value.meta[key.split(':')[1]].meta;
+
 	import VerseOptionsDropdown from '$display/verses/VerseOptionsDropdown.svelte';
 	import Word from '$display/verses/Word.svelte';
 	import Tooltip from '$ui/FlowbiteSvelte/tooltip/Tooltip.svelte';
@@ -20,9 +23,9 @@
 
 	// Dynamically load the fonts if mushaf fonts are selected
 	if ([2, 3].includes($__fontType)) {
-		loadFont(`p${value.meta.page}`, `${mushafWordFontLink}/QCF4${`00${value.meta.page}`.slice(-3)}_COLOR-Regular.woff?version=${mushafFontVersion}`).then(() => {
+		loadFont(`p${verseMetaData.page}`, `${mushafWordFontLink}/QCF4${`00${verseMetaData.page}`.slice(-3)}_COLOR-Regular.woff?version=${mushafFontVersion}`).then(() => {
 			// Hide the v4 words by default and show when the font is loaded...
-			document.querySelectorAll(`.p${value.meta.page}`).forEach((element) => {
+			document.querySelectorAll(`.p${verseMetaData.page}`).forEach((element) => {
 				element.classList.remove('invisible');
 			});
 		});
@@ -87,7 +90,7 @@
 	// But in Mocha Night & Dark Luxury themes, if non-tajweed fonts were selected, use custom palette to match theme
 	$: v4hafsClasses = `
 		invisible v4-words 
-		p${value.meta.page} 
+		p${verseMetaData.page} 
 		${$__fontType === 3 ? 'theme-palette-tajweed' : 'theme-palette-normal'} 
 		${$__fontType === 2 && $__websiteTheme === 5 ? 'mocha-night-font-color' : ''}
 		${$__fontType === 2 && $__websiteTheme === 9 ? 'dark-luxury-font-color' : ''}
@@ -103,7 +106,7 @@
 </script>
 
 <!-- words -->
-{#each { length: value.meta.words } as _, word}
+{#each { length: verseMetaData.words } as _, word}
 	<Word {value} {word} {key} {line} {wordClickHandler} {wordAndEndIconCommonClasses} {wordSpanClasses} {v4hafsClasses} />
 {/each}
 
@@ -115,15 +118,15 @@
 		<span class={wordSpanClasses} data-fontSize={fontSizes.arabicText}>
 			<!-- 1: Uthmanic Hafs Digital, 3: Indopak Madinah -->
 			{#if [1, 4].includes($__fontType)}
-				{value.words.end}
+				{verseArabicEndData}
 				<!-- 2: Uthmanic Hafs Mushaf -->
 			{:else if [2, 3].includes($__fontType)}
-				<span style="font-family: p{value.meta.page}" class="{v4hafsClasses} custom-ayah-icon-color">{value.words.end}</span>
+				<span style="font-family: p{verseMetaData.page}" class="{v4hafsClasses} custom-ayah-icon-color">{verseArabicEndData}</span>
 			{/if}
 		</span>
 	</div>
 	{#if displayIsContinuous}
-		<VerseOptionsDropdown page={value.meta.page} />
+		<VerseOptionsDropdown page={verseMetaData.page} />
 	{/if}
 
 	<!-- end icon tooltip -->

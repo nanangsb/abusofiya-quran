@@ -16,7 +16,6 @@
 
 	import {
 		__currentPage,
-		__chapterData,
 		__chapterNumber,
 		__fontType,
 		__displayType,

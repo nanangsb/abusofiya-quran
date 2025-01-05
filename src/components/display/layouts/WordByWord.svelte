@@ -10,10 +10,12 @@
 </script>
 
 {#if value}
-	<!-- show page number  -->
-	<PageDivider {key} page={value.meta.page} />
+	{@const verseMetaData = value.meta[key.split(':')[1]].meta}
 
-	<div id={key} class="verse flex flex-col py-8 space-y-8 verse-{value.meta.chapter}-{value.meta.verse}" data-words={value.meta.words} data-page={value.meta.page} data-juz={value.meta.juz} use:inview on:inview_enter={(event) => updateSettings({ type: 'lastRead', value: { key, page: value.meta.page } })}>
+	<!-- show page number  -->
+	<PageDivider {key} page={verseMetaData.page} />
+
+	<div id={key} class="verse flex flex-col py-8 space-y-8 verse-{verseMetaData.chapter}-{verseMetaData.verse}" data-words={verseMetaData.words} data-page={verseMetaData.page} data-juz={verseMetaData.juz} use:inview on:inview_enter={(event) => updateSettings({ type: 'lastRead', value: { key, page: verseMetaData.page } })}>
 		<VerseOptionButtons {key} {value} />
 
 		<!-- words -->
@@ -22,7 +24,7 @@
 		</div>
 
 		<!-- verse translations and transliterations -->
-		<Translations {value} />
+		<!-- <Translations {value} /> -->
 	</div>
 
 	<div class="border-b {window.theme('border')}"></div>
