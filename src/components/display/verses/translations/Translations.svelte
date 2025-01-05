@@ -6,8 +6,7 @@
 	import { __currentPage, __verseTranslations, __verseTranslationData, __chapterData, __userSettings, __fontType, __wordTranslation, __wordTransliteration, __keysToFetch } from '$utils/stores';
 	import { fetchChapterData, fetchVerseTranslationData } from '$utils/fetchData';
 
-	$: verseMetaData = value.meta[key.split(':')[1]].meta;
-
+	const verseMetaData = value.meta[key.split(':')[1]].meta;
 	let verseTranslationData, verseTransliterationData;
 
 	$: fontSizes = JSON.parse($__userSettings).displaySettings.fontSizes;
@@ -54,7 +53,7 @@
 				{#if $__verseTranslationData[verseMetaData.verse - 1].hasOwnProperty('translations')}
 					{@const sortedTranslations = getSortedTranslations($__verseTranslationData[Object.keys($__verseTranslationData)[verseMetaData.verse - 1]].translations, $__verseTranslations)}
 					{#each sortedTranslations as verseTranslation}
-						<Layout verseTranslationID={verseTranslation.resource_id} {verseTranslation} {value} />
+						<Layout verseTranslationID={verseTranslation.resource_id} {verseTranslation} {key} {value} />
 					{/each}
 				{/if}
 			{:else}
@@ -69,11 +68,11 @@
 			{:then verseTransliterationData}
 				{#if verseTransliterationData}
 					{#if $__verseTranslations.includes(1)}
-						<Layout verseTranslationID={1} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[0]} {value} />
+						<Layout verseTranslationID={1} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[0]} {key} {value} />
 					{/if}
 
 					{#if $__verseTranslations.includes(3)}
-						<Layout verseTranslationID={3} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[1]} {value} />
+						<Layout verseTranslationID={3} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[1]} {key} {value} />
 					{/if}
 				{/if}
 			{:catch error}
@@ -88,7 +87,7 @@
 					{#if verseTranslationData[Object.keys(verseTranslationData)[verseMetaData.verse - 1]].hasOwnProperty('translations')}
 						{@const sortedTranslations = getSortedTranslations(verseTranslationData[Object.keys(verseTranslationData)[verseMetaData.verse - 1]].translations, $__verseTranslations)}
 						{#each sortedTranslations as verseTranslation}
-							<Layout verseTranslationID={verseTranslation.resource_id} {verseTranslation} {value} />
+							<Layout verseTranslationID={verseTranslation.resource_id} {verseTranslation} {key} {value} />
 						{/each}
 					{/if}
 				{/if}

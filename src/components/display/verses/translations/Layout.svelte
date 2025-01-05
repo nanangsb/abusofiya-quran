@@ -1,17 +1,19 @@
 <script>
+	export let key, value;
 	export let verseTranslationID;
 	export let verseTranslation;
-	export let value;
 
 	import CrossSolid from '$svgs/CrossSolid.svelte';
 	import { __userSettings, __verseTranslations, __currentPage } from '$utils/stores';
 	import { selectableVerseTranslations, rightToLeftVerseTranslations } from '$data/options';
 
+	const verseMetaData = value.meta[key.split(':')[1]].meta;
+
 	// Retrieve URL parameters
 	const params = new URLSearchParams(window.location.search);
 	const searchQuery = params.get('query') === null ? '' : params.get('query');
 
-	const translationFootnoteClasses = `hidden my-2 footnote-block px-2 py-2 border-2 ${window.theme('border')} rounded-2xl footnote-${value.meta.chapter}-${value.meta.verse}-${verseTranslationID}`;
+	const translationFootnoteClasses = `hidden my-2 footnote-block px-2 py-2 border-2 ${window.theme('border')} rounded-2xl footnote-${verseMetaData.chapter}-${verseMetaData.verse}-${verseTranslationID}`;
 	const footnoteSupClasses = `ml-1 mt-1 px-2 py-1 rounded-full font-semibold cursor-pointer system-font ${window.theme('bgSecondaryDark')}`;
 
 	let footnoteId;
@@ -85,7 +87,7 @@
 			updatedVerseText = highlightSearchedText(searchQuery, updatedVerseText);
 		}
 
-		updatedVerseText = updatedVerseText.replace(/<sup/g, `<sup onclick='supClick(this)' title='Show footnote' data-chapter='${value.meta.chapter}' data-verse='${value.meta.verse}' data-translation=${verseTranslationID} class='${footnoteSupClasses}'`);
+		updatedVerseText = updatedVerseText.replace(/<sup/g, `<sup onclick='supClick(this)' title='Show footnote' data-chapter='${verseMetaData.chapter}' data-verse='${verseMetaData.verse}' data-translation=${verseTranslationID} class='${footnoteSupClasses}'`);
 		return updatedVerseText;
 	}
 
@@ -115,7 +117,7 @@
 			</div>
 
 			<!-- close footnote button -->
-			<button on:click={() => hideFootnote(value.meta.chapter, value.meta.verse, verseTranslationID)} title="Close footnote"><CrossSolid size={6} /></button>
+			<button on:click={() => hideFootnote(verseMetaData.chapter, verseMetaData.verse, verseTranslationID)} title="Close footnote"><CrossSolid size={6} /></button>
 		</div>
 		<div class="text {isTranslationRTL(verseTranslation.resource_id) && 'direction-rtl'} {isTranslationUrduOrPersian(verseTranslation.resource_id) && 'font-Urdu'}">...</div>
 	</div>
