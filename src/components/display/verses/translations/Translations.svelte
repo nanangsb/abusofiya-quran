@@ -1,10 +1,12 @@
 <script>
-	export let value;
+	export let key, value;
 
 	import Layout from '$display/verses/translations/Layout.svelte';
 	import Skeleton from '$ui/FlowbiteSvelte/skeleton/Skeleton.svelte';
-	import { __currentPage, __verseKey, __verseTranslations, __verseTranslationData, __chapterData, __userSettings, __fontType, __wordTranslation, __wordTransliteration, __keysToFetch } from '$utils/stores';
+	import { __currentPage, __verseTranslations, __verseTranslationData, __chapterData, __userSettings, __fontType, __wordTranslation, __wordTransliteration, __keysToFetch } from '$utils/stores';
 	import { fetchChapterData, fetchVerseTranslationData } from '$utils/fetchData';
+
+	$: verseMetaData = value.meta[key.split(':')[1]].meta;
 
 	let verseTranslationData, verseTransliterationData;
 
@@ -13,12 +15,12 @@
 
 	// Setting the variables depending on the page
 	$: chapterData = $__currentPage === 'mushaf' ? JSON.parse(localStorage.getItem('pageData')) : $__chapterData;
-	$: chapterToFetch = $__currentPage === 'mushaf' ? parseInt($__verseKey.split(':')[0], 10) : value.meta.chapter;
+	$: chapterToFetch = $__currentPage === 'mushaf' ? parseInt(key.split(':')[0], 10) : verseMetaData.chapter;
 
 	// Fetch verse translations and transliteration data for pages other than chapter
 	$: if ($__currentPage !== 'chapter') {
 		verseTranslationData = fetchVerseTranslationData(chapterToFetch, $__verseTranslations.toString());
-		verseTransliterationData = fetchChapterData({ chapter: value.meta.chapter, reRenderWhenTheseUpdates: $__verseTranslations });
+		verseTransliterationData = fetchChapterData({ chapter: verseMetaData.chapter, reRenderWhenTheseUpdates: $__verseTranslations });
 	}
 
 	// This function takes two arguments: translationsObject and translationsSelected.
@@ -37,20 +39,20 @@
 		{#if $__currentPage === 'chapter'}
 			{#if $__verseTranslationData}
 				<!-- tajweed/syllables transliteration -->
-				{#if $__verseTranslations.includes(1)}
-					<Layout verseTranslationID={1} verseTranslation={chapterData[`${value.meta.chapter}:${value.meta.verse}`].translations[0]} {value} />
-				{/if}
+				<!-- {#if $__verseTranslations.includes(1)}
+					<Layout verseTranslationID={1} verseTranslation={chapterData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[0]} {value} />
+				{/if} -->
 
 				<!-- tajweed/syllables transliteration -->
-				{#if $__verseTranslations.includes(3)}
-					<Layout verseTranslationID={3} verseTranslation={chapterData[`${value.meta.chapter}:${value.meta.verse}`].translations[1]} {value} />
-				{/if}
+				<!-- {#if $__verseTranslations.includes(3)}
+					<Layout verseTranslationID={3} verseTranslation={chapterData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[1]} {value} />
+				{/if} -->
 				<!-- ================== -->
 
 				<!-- data from Quran.com's API -->
 				<!-- after transliteration, show other translations -->
-				{#if $__verseTranslationData[value.meta.verse - 1].hasOwnProperty('translations')}
-					{@const sortedTranslations = getSortedTranslations($__verseTranslationData[Object.keys($__verseTranslationData)[value.meta.verse - 1]].translations, $__verseTranslations)}
+				{#if $__verseTranslationData[verseMetaData.verse - 1].hasOwnProperty('translations')}
+					{@const sortedTranslations = getSortedTranslations($__verseTranslationData[Object.keys($__verseTranslationData)[verseMetaData.verse - 1]].translations, $__verseTranslations)}
 					{#each sortedTranslations as verseTranslation}
 						<Layout verseTranslationID={verseTranslation.resource_id} {verseTranslation} {value} />
 					{/each}
@@ -67,11 +69,11 @@
 			{:then verseTransliterationData}
 				{#if verseTransliterationData}
 					{#if $__verseTranslations.includes(1)}
-						<Layout verseTranslationID={1} verseTranslation={verseTransliterationData[`${value.meta.chapter}:${value.meta.verse}`].translations[0]} {value} />
+						<Layout verseTranslationID={1} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[0]} {value} />
 					{/if}
 
 					{#if $__verseTranslations.includes(3)}
-						<Layout verseTranslationID={3} verseTranslation={verseTransliterationData[`${value.meta.chapter}:${value.meta.verse}`].translations[1]} {value} />
+						<Layout verseTranslationID={3} verseTranslation={verseTransliterationData[`${verseMetaData.chapter}:${verseMetaData.verse}`].translations[1]} {value} />
 					{/if}
 				{/if}
 			{:catch error}
@@ -83,8 +85,8 @@
 				<Skeleton size="xxl" class="mb-2.5" />
 			{:then verseTranslationData}
 				{#if verseTranslationData}
-					{#if verseTranslationData[Object.keys(verseTranslationData)[value.meta.verse - 1]].hasOwnProperty('translations')}
-						{@const sortedTranslations = getSortedTranslations(verseTranslationData[Object.keys(verseTranslationData)[value.meta.verse - 1]].translations, $__verseTranslations)}
+					{#if verseTranslationData[Object.keys(verseTranslationData)[verseMetaData.verse - 1]].hasOwnProperty('translations')}
+						{@const sortedTranslations = getSortedTranslations(verseTranslationData[Object.keys(verseTranslationData)[verseMetaData.verse - 1]].translations, $__verseTranslations)}
 						{#each sortedTranslations as verseTranslation}
 							<Layout verseTranslationID={verseTranslation.resource_id} {verseTranslation} {value} />
 						{/each}

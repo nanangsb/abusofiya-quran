@@ -24,7 +24,7 @@
 		</div>
 
 		<!-- verse translations and transliterations -->
-		<!-- <Translations {value} /> -->
+		<Translations {key} {value} />
 	</div>
 
 	<div class="border-b {window.theme('border')}"></div>
