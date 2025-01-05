@@ -85,7 +85,7 @@ export async function fetchTimestampData(chapter) {
 
 // Function to fetch Arabic data
 async function fetchArabicData(chapter, arabicId) {
-	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/arabic/${arabicId}.json`;
+	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/arabic/${arabicId}.json?bypass_cache=true`;
 	try {
 		const response = await fetch(url);
 		const data = await response.json();
@@ -97,7 +97,7 @@ async function fetchArabicData(chapter, arabicId) {
 
 // Function to fetch Translation data
 async function fetchTranslationData(chapter, translationId) {
-	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/translation/${translationId}.json`;
+	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/translation/${translationId}.json?bypass_cache=true`;
 	try {
 		const response = await fetch(url);
 		const data = await response.json();
@@ -109,7 +109,7 @@ async function fetchTranslationData(chapter, translationId) {
 
 // Function to fetch Transliteration data
 async function fetchTransliterationData(chapter, transliterationId) {
-	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/transliteration/${transliterationId}.json`;
+	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/transliteration/${transliterationId}.json?bypass_cache=true`;
 	try {
 		const response = await fetch(url);
 		const data = await response.json();
@@ -121,7 +121,7 @@ async function fetchTransliterationData(chapter, transliterationId) {
 
 // Function to fetch Transliteration data
 async function fetchMetaData(chapter) {
-	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/meta/meta.json`;
+	const url = `https://static.quranwbw.com/data/v4/chapters/${chapter}/word-data/meta/meta.json?bypass_cache=true`;
 	try {
 		const response = await fetch(url);
 		const data = await response.json();
