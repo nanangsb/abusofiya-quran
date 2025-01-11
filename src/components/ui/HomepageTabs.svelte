@@ -12,8 +12,7 @@
 	import { buttonClasses, buttonOutlineClasses } from '$data/commonClasses';
 	import { checkTimeSpecificChapters } from '$utils/checkTimeSpecificChapters';
 	import { term } from '$utils/terminologies';
-	import { fetchVersesData } from '$utils/fetchData';
-	import { splitDelimiter } from '$data/websiteSettings';
+	import { staticEndpoint } from '$data/websiteSettings';
 
 	// CSS classes for chapter cards and tabs
 	const cardGridClasses = 'grid md:grid-cols-2 lg:grid-cols-3 gap-3';
@@ -29,16 +28,26 @@
 	let activeTab = 1; // Default to chapters tab
 	let chapterSortIsAscending = true;
 	let chapterListOrder = [...quranMetaData];
+	let fullQuranData;
 
 	// Reactive variable to update last read chapter and verse
-	$: {
-		if ($__lastRead.hasOwnProperty('key')) {
-			[lastReadChapter, lastReadVerse] = $__lastRead.key.split(':').map(Number);
-		}
+	$: if ($__lastRead.hasOwnProperty('key')) {
+		[lastReadChapter, lastReadVerse] = $__lastRead.key.split(':').map(Number);
 	}
 
-	// Reactive variable to fetch bookmarks data when on the bookmarks tab
-	$: fetchData = activeTab === 3 && totalBookmarks !== 0 ? fetchVersesData({ verses: $__userBookmarks.toString(), fontType: 1 }) : null;
+	// Fetch full Quran data (uthmani) for bookmarked verses
+	$: if (activeTab === 3 && totalBookmarks !== 0) {
+		fullQuranData = (async () => {
+			try {
+				const response = await fetch(`${staticEndpoint}/full-quran/uthmani.json`);
+				const data = await response.json();
+				return data.data;
+			} catch (error) {
+				// ...
+			}
+		})();
+	}
+
 	$: totalBookmarks = $__userBookmarks.length;
 	$: totalNotes = Object.keys($__userNotes).length;
 
@@ -201,14 +210,16 @@
 				{:else}
 					<div class="{cardGridClasses} grid-cols-1">
 						{#each $__userBookmarks as bookmark}
+							{@const [bookmarkChapter, bookmarkVerse] = bookmark.split(':').map(Number)}
+
 							<div class="flex flex-row space-x-2">
-								<a href="{bookmark.split(':')[0]}/{bookmark.split(':')[1]}" class="!justify-start {cardInnerClasses} w-full flex-col">
-									<div class="text-sm">{quranMetaData[bookmark.split(':')[0]].transliteration} ({bookmark})</div>
+								<a href="{bookmarkChapter}/{bookmarkVerse}" class="!justify-start {cardInnerClasses} w-full flex-col">
+									<div class="text-sm">{quranMetaData[bookmarkChapter].transliteration} ({bookmark})</div>
 
 									{#if activeTab === 3 && totalBookmarks !== 0}
 										<div class="text-sm truncate direction-rtl text-right arabic-font-1 opacity-70">
-											{#await fetchData then data}
-												{data[bookmark].words.arabic.split(splitDelimiter).join(' ')}
+											{#await fullQuranData then data}
+												{data[`${bookmarkChapter}:${bookmarkVerse}`]}
 											{:catch error}
 												<p></p>
 											{/await}
