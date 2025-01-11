@@ -5,7 +5,7 @@
 	import WordsBlock from '$display/verses/WordsBlock.svelte';
 	import Table from './Table.svelte';
 	import { quranMetaData } from '$data/quranMeta';
-	import { apiEndpoint, apiVersion, apiByPassCache, errorLoadingDataMessage } from '$data/websiteSettings';
+	import { apiEndpoint, apiVersion, apiByPassCache, staticEndpoint, errorLoadingDataMessage } from '$data/websiteSettings';
 	import { __currentPage, __fontType, __wordTranslation, __verseTranslations, __wordTransliteration, __morphologyKey, __lexiconModalVisible, __wordRoot } from '$utils/stores';
 	import { buttonClasses, buttonOutlineClasses } from '$data/commonClasses';
 	import { fetchVersesData } from '$utils/fetchData';
@@ -53,7 +53,7 @@
 		// Fetch word summary data
 		fetchWordSummary = (async () => {
 			try {
-				const response = await fetch(`${apiEndpoint}/morphology/summary?word=${$__morphologyKey}&version=${apiVersion}&bypass_cache=${apiByPassCache}`);
+				const response = await fetch(`${staticEndpoint}/words-summary/${chapter}.json`);
 				const data = await response.json();
 				return data.data;
 			} catch (error) {
@@ -117,7 +117,7 @@
 			<span>...</span>
 		{:then fetchWordSummary}
 			<div class="flex flex-col space-y-4">
-				<span>{@html fetchWordSummary.summary}</span>
+				<span>{@html fetchWordSummary[$__morphologyKey]}</span>
 				<!-- <button class="text-lg font-bold underline" on:click={() => showLexiconModal()}>View Lanes Lexicon Data &rarr;</button> -->
 			</div>
 
