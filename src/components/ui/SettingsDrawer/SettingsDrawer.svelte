@@ -20,7 +20,6 @@
 		__chapterNumber,
 		__fontType,
 		__displayType,
-		__selectedDisplayId,
 		__websiteTheme,
 		__wordTranslation,
 		__wordTransliteration,
@@ -36,7 +35,6 @@
 		__settingsDrawerHidden,
 		__wakeLockEnabled,
 		__englishTerminology,
-		__lastRead,
 		__hideNonDuaPart,
 		__playButtonsFunctionality,
 		__wordMorphologyOnClick
@@ -212,7 +210,7 @@
 					<div id="display-type-setting" class={settingsBlockClasses}>
 						<div class="flex flex-row justify-between items-center">
 							<div class="block">Display Type</div>
-							<button class={selectorClasses} on:click={() => gotoIndividualSetting('display-type')}>{selectableDisplays[$__selectedDisplayId].displayName}</button>
+							<button class={selectorClasses} on:click={() => gotoIndividualSetting('display-type')}>{selectableDisplays[$__displayType].displayName}</button>
 						</div>
 						<p class={settingsDescriptionClasses}>Different {term('verse')} layouts that you can choose from.</p>
 					</div>
@@ -486,7 +484,20 @@
 
 			<!-- reset settings button -->
 			<div class="flex flex-col justify-center border-t {window.theme('border')} py-6 space-y-4 {settingsDrawerOpacity}">
-				<button on:click={() => resetSettings()} class="text-sm {buttonClasses}">Reset Settings</button>
+				<!-- Reset Settings button -->
+				<button
+					on:click={() => {
+						// Show the confirm dialog
+						const userResponse = confirm('Are you sure you want to reset settings? This action cannot be reversed.');
+						if (userResponse) {
+							resetSettings();
+						}
+					}}
+					class="text-sm {buttonClasses}"
+				>
+					Reset Settings
+				</button>
+
 				<p class={settingsDescriptionClasses}>Your bookmarks and notes will remain unaffected.</p>
 			</div>
 		</div>

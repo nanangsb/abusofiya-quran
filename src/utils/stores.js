@@ -26,7 +26,6 @@ let __websiteOnline,
 	__timestampData,
 	__playbackSpeed,
 	__displayType,
-	__selectedDisplayId,
 	__websiteTheme,
 	__lastRead,
 	__favouriteChapters,
@@ -65,7 +64,9 @@ let __websiteOnline,
 	__playButtonsFunctionality,
 	__mushafMinimalModeEnabled,
 	__keysToFetch,
-	__wordMorphologyOnClick;
+	__keysToFetchData,
+	__wordMorphologyOnClick,
+	__homepageExtrasPanelVisible;
 
 if (browser) {
 	const userSettings = JSON.parse(localStorage.getItem('userSettings'));
@@ -142,7 +143,6 @@ if (browser) {
 
 	// to store the display type - WBW, Normal, Continuous, etc...
 	__displayType = writable(userSettings.displaySettings.displayType);
-	__selectedDisplayId = writable(1);
 
 	// to store the website theme
 	__websiteTheme = writable(userSettings.displaySettings.websiteTheme);
@@ -240,8 +240,14 @@ if (browser) {
 	// storing the total keys to fetch by Individual component
 	__keysToFetch = writable(null);
 
+	// storing the keys data fetched by Individual component
+	__keysToFetchData = writable({});
+
 	// what happens when a user clicks on a word
 	__wordMorphologyOnClick = writable(userSettings.displaySettings.wordMorphologyOnClick);
+
+	// visibiliy of the extras panel on homepage (bookmarks, notes, etc...)
+	__homepageExtrasPanelVisible = writable(userSettings.displaySettings.homepageExtrasPanelVisible);
 }
 
 export {
@@ -270,7 +276,6 @@ export {
 	__timestampData,
 	__playbackSpeed,
 	__displayType,
-	__selectedDisplayId,
 	__websiteTheme,
 	__lastRead,
 	__favouriteChapters,
@@ -309,5 +314,7 @@ export {
 	__playButtonsFunctionality,
 	__mushafMinimalModeEnabled,
 	__keysToFetch,
-	__wordMorphologyOnClick
+	__keysToFetchData,
+	__wordMorphologyOnClick,
+	__homepageExtrasPanelVisible
 };

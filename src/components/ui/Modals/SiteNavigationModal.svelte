@@ -14,7 +14,7 @@
 	import { term } from '$utils/terminologies';
 	import { getModalTransition } from '$utils/getModalTransition';
 
-	const linkClasses = `w-full flex flex-row space-x-2 py-4 px-4 rounded-xl items-center cursor-pointer ${window.theme('bgSecondaryLight')}`;
+	const linkClasses = `w-full flex flex-row space-x-2 py-4 px-4 rounded-xl items-center cursor-pointer ${window.theme('hoverBorder')} ${window.theme('bgSecondaryLight')}`;
 	const linkTextClasses = 'text-xs md:text-sm text-left w-[-webkit-fill-available] truncate';
 
 	// hide the modal when page changes
@@ -58,6 +58,7 @@
 						__tajweedRulesModalVisible.set(true);
 					}}
 					class={linkClasses}
+					data-umami-event="Tajweed Modal Button"
 				>
 					<TajweedRules size={4} />
 					<span class={linkTextClasses}>{term('tajweed')} Rules</span>
@@ -88,7 +89,7 @@
 				</a>
 
 				<!-- legacy site link -->
-				<a href="https://old.quranwbw.com/" target="_blank" class={linkClasses}>
+				<a href="https://old.quranwbw.com/" target="_blank" class={linkClasses} data-umami-event="Legacy Site Button">
 					<LegacySite size={4} />
 					<span class={linkTextClasses}>Old Website</span>
 				</a>

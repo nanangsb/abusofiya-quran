@@ -30,14 +30,16 @@ function generateThemes() {
 			bgSecondaryDark: `bg-[${color2}]/15`,
 			text: `text-[${color3 !== undefined ? color3 : color2}]`,
 			textSecondary: `text-[${color2}]`,
+			textBgColor: `text-[${color1}]`,
 			border: `border-[${color2}]/20`,
-			borderDark: `border-[${color2}]`,
+			borderDark: `!border-[${color2}]`,
 			icon: `${color2}`,
 			input: `focus:border-[${color2}] focus:ring-[${color2}]`,
 			checked: `peer-checked:border-2 peer-checked:border-[${color2}] peer-checked:border-[${color2}]`,
 			toggle: `bg-[${color2}]/5 after:bg-[${color1}] after:border-[${color1}] peer-checked:bg-[${color2}]`,
 			slider: `bg-[${color2}]/10 [&::-webkit-slider-thumb]:!bg-[${color2}]`,
 			hover: `hover:bg-[${color2}]/5`,
+			hoverBorder: `border border-transparent hover:border-[${color2}]`,
 			via: `via-[${color2}]`,
 			placeholder: `placeholder:text-[${color2}]/50`
 		};

@@ -10,7 +10,7 @@
 	// import BottomToolbarButtons from '$ui/BottomToolbar/BottomToolbarButtons.svelte';
 	import Tooltip from '$ui/FlowbiteSvelte/tooltip/Tooltip.svelte';
 	import { goto } from '$app/navigation';
-	import { __chapterNumber, __pageNumber, __currentPage, __fontType, __wordTranslation, __mushafPageDivisions, __lastRead, __displayType, __topNavbarVisible, __bottomToolbarVisible, __mushafMinimalModeEnabled } from '$utils/stores';
+	import { __chapterNumber, __pageNumber, __currentPage, __fontType, __wordTranslation, __mushafPageDivisions, __displayType, __topNavbarVisible, __bottomToolbarVisible, __mushafMinimalModeEnabled } from '$utils/stores';
 	import { updateSettings } from '$utils/updateSettings';
 	import { apiEndpoint, apiVersion, apiByPassCache, errorLoadingDataMessage, mushafWordFontLink, mushafFontVersion } from '$data/websiteSettings';
 	import { quranMetaData } from '$data/quranMeta';
@@ -85,6 +85,9 @@
 				juz: apiData[Object.keys(apiData)[0]].meta.juz
 			});
 
+			// Update the last read page
+			updateSettings({ type: 'lastRead', value: apiData[Object.keys(apiData)[0]].meta });
+
 			// Event listeners for swipe gestures
 			const pageBlock = document.getElementById('page-block');
 			pageBlock.addEventListener('swiped-left', () => goto(`/page/${page === 1 ? 1 : page - 1}`, { replaceState: false }));
@@ -93,10 +96,8 @@
 			return apiData;
 		})();
 
-		// Update the page number and last read page
+		// Update the page number
 		__pageNumber.set(page);
-		const key = JSON.parse(localStorage.getItem('userSettings')).lastRead.key;
-		updateSettings({ type: 'lastRead', value: { key: key !== undefined ? key : '1:1', page } });
 	}
 
 	// Only allow continuous normal mode, without saving the setting
@@ -147,12 +148,8 @@
 
 <!-- only show the minimize minimal mode button when it is enabled -->
 {#if $__mushafMinimalModeEnabled}
-	<!-- <div class="flex flex-row justify-between mx-auto max-w-3xl md:max-w-[40rem] -mt-12 pb-12 scale-[0.80]">
-		<BottomToolbarButtons />
-	</div> -->
-
 	<div class="flex justify-center -mt-12 pb-16">
-		<button class="w-fit flex flex-row space-x-2 py-3 px-3 rounded-xl items-center cursor-pointer {window.theme('bgSecondaryLight')}" on:click={toggleMushafMinimalMode}>
+		<button class="w-fit flex flex-row space-x-2 py-3 px-3 rounded-xl items-center cursor-pointer {window.theme('hoverBorder')} {window.theme('bgSecondaryLight')}" on:click={toggleMushafMinimalMode} data-umami-event="Mushaf Minimal Mode Button">
 			<Minimize size={3} />
 		</button>
 		<Tooltip arrow={false} type="light" class="z-30 hidden md:block font-normal">Minimal Mode</Tooltip>

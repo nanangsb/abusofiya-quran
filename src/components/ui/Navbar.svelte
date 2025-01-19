@@ -8,8 +8,6 @@
 
 	let lastReadPage;
 	let lastReadJuz;
-	let lastReadChapter = 1;
-	let lastReadVerse = 1;
 	let navbarChapterName;
 	let mushafChapters = [];
 	let mushafJuz = '...';
@@ -23,25 +21,19 @@
 	`;
 
 	// Update last read details
-	$: {
-		try {
-			const lastReadElement = document.getElementById($__lastRead.key);
-			lastReadPage = lastReadElement?.getAttribute('data-page');
-			lastReadJuz = lastReadElement?.getAttribute('data-juz');
-
-			if ($__lastRead.hasOwnProperty('key')) {
-				[lastReadChapter, lastReadVerse] = $__lastRead.key.split(':').map(Number);
-			}
-		} catch (error) {
-			console.log(error);
-		}
+	$: try {
+		const lastReadElement = document.getElementById(`${$__lastRead.chapter}:${$__lastRead.verse}`);
+		lastReadPage = lastReadElement?.getAttribute('data-page');
+		lastReadJuz = lastReadElement?.getAttribute('data-juz');
+	} catch (error) {
+		console.log(error);
 	}
 
 	// Get the revelation type of the current chapter
 	$: chapterRevelation = quranMetaData[$__chapterNumber].revelation;
 
 	// Calculate the scroll progress percentage for the current chapter
-	$: chapterProgress = (lastReadVerse / quranMetaData[lastReadChapter].verses) * 100;
+	$: chapterProgress = $__lastRead.hasOwnProperty('chapter') ? ($__lastRead.verse / quranMetaData[$__lastRead.chapter].verses) * 100 : 0;
 
 	// Get the chapter name for the navbar
 	$: {
@@ -66,12 +58,12 @@
 
 <nav id="navbar" class={navbarClasses}>
 	<div id="top-nav" class={topNavClasses} aria-label="Home">
-		<a href="/" class="flex flex-row items-center p-3 cursor-pointer rounded-3xl {window.theme('bgSecondaryLight')}" aria-label="Home">
+		<a href="/" class="flex flex-row items-center p-3 cursor-pointer rounded-3xl {window.theme('hoverBorder')} {window.theme('bgSecondaryLight')}" aria-label="Home">
 			<Home />
 			<span class="text-xs pl-2 hidden md:block">Home</span>
 		</a>
 
-		<button class="flex items-center p-3 text-sm w-auto p-2 rounded-3xl {window.theme('border')} {window.theme('hover')}" on:click={() => __quranNavigationModalVisible.set(true)}>
+		<button class="flex items-center p-3 text-sm w-auto p-2 rounded-3xl {window.theme('hoverBorder')} {window.theme('hover')}" on:click={() => __quranNavigationModalVisible.set(true)}>
 			<!-- display the chapter name on chapter page -->
 			{#if $__currentPage === 'chapter'}
 				{@html navbarChapterName}
@@ -106,7 +98,7 @@
 			{/if}
 		</button>
 
-		<button class="flex flex-row items-center p-3 cursor-pointer rounded-3xl {window.theme('bgSecondaryLight')}" type="button" aria-label="Menu" on:click={() => __siteNavigationModalVisible.set(true)}>
+		<button class="flex flex-row items-center p-3 cursor-pointer rounded-3xl {window.theme('hoverBorder')} {window.theme('bgSecondaryLight')}" type="button" aria-label="Menu" on:click={() => __siteNavigationModalVisible.set(true)}>
 			<span class="text-xs pr-2 hidden md:block">Menu</span>
 			<Menu />
 		</button>
@@ -124,7 +116,7 @@
 			</div>
 			<div class="flex flex-row items-center py-2">
 				<span>{lastReadPage ? `Page ${lastReadPage}` : '...'}</span>
-				<span class="px-1">/</span>
+				<span class="px-1 opacity-70">/</span>
 				<span>{lastReadJuz ? `${term('juz')} ${lastReadJuz}` : '...'}</span>
 			</div>
 		</div>

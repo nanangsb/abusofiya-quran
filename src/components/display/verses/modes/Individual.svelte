@@ -6,16 +6,24 @@
 	import Normal from '$display/layouts/Normal.svelte';
 	import TranslationTransliteration from '$display/layouts/TranslationTransliteration.svelte';
 	import Bismillah from '$display/Bismillah.svelte';
-	import ChapterHeader from '$display/ChapterHeader.svelte';
-	import { __displayType, __fontType, __wordTranslation, __wordTransliteration, __keysToFetch, __currentPage } from '$utils/stores';
-	import { buttonOutlineClasses } from '$data/commonClasses';
+	import { __displayType, __fontType, __wordTranslation, __wordTransliteration, __keysToFetch, __keysToFetchData, __currentPage, __pageURL, __userSettings } from '$utils/stores';
+	import { buttonClasses } from '$data/commonClasses';
 	import { fetchChapterData } from '$utils/fetchData';
 	import { isValidVerseKey } from '$utils/validateKey';
 	import { goto } from '$app/navigation';
 	import { inview } from 'svelte-inview';
 	import { onMount } from 'svelte';
+	import { term } from '$utils/terminologies';
+	import { selectableDisplays } from '$data/options';
+	import { quranMetaData } from '$data/quranMeta';
 
-	const allowedDisplayTypes = [1, 2, 7];
+	const dividerClasses = `
+		flex flex-row justify-center text-center mx-auto w-full my-4 
+		py-2 px-4 text-sm rounded-full
+		${window.theme('hoverBorder')}
+		${window.theme('bgSecondaryLight')}
+	`;
+
 	const displayComponents = {
 		1: { component: WordByWord },
 		2: { component: Normal },
@@ -38,18 +46,30 @@
 	let keysArrayLength = keysArray.length - 1;
 	let nextStartIndex, nextEndIndex;
 	let renderedVerses = 0;
+	let showLoadPreviousVerseButton = false;
 	let showContinueReadingButton = false;
 	let dataMap = {};
+	let keyToStartWith = null;
+
+	// Only allow display types listed in displayComponents, else default to type 1, and don't save the layout in settings if not allowed
+	$: if (!displayComponents.hasOwnProperty($__displayType)) {
+		$__displayType = 1;
+	}
+
+	// Update the layout for the previous/next verse buttons
+	$: loadPrevNextVerseButtons = `flex ${selectableDisplays[$__displayType].continuous ? 'flex-row-reverse' : 'flex-row'} space-x-4 justify-center`;
 
 	// Checking if a start key was provided
 	if (params.get('startKey') !== undefined || params.get('startKey') !== null) {
 		try {
-			let keyToStartWith = params.get('startKey');
+			keyToStartWith = params.get('startKey');
 
 			if (isValidVerseKey(keyToStartWith)) {
 				goto(removeParam('startKey'), { replaceState: false });
 				startIndex = getIndexOfKey(keyToStartWith);
 				endIndex = keysArrayLength > maxIndexesAllowedToRender ? startIndex + maxIndexesAllowedToRender : keysArrayLength;
+
+				if (startIndex > 0) showLoadPreviousVerseButton = true;
 			}
 		} catch (error) {
 			// ...
@@ -62,11 +82,6 @@
 	// Basic checks
 	if (startIndex < 0) startIndex = 0;
 	if (endIndex > keysArrayLength) endIndex = keysArrayLength;
-
-	// Only allow display type 1, 2, & 7, and don't save the layout in settings if not allowed
-	if (!allowedDisplayTypes.includes($__displayType)) {
-		__displayType.set(1);
-	}
 
 	function loadNextVerses() {
 		try {
@@ -133,19 +148,31 @@
 		}
 	}
 
-	// This function fetches the data for all chapters within the specified startIndex and endIndex range, stores the data in a dataMap object,
-	// and then renders the fetched data on the page.
-	// Instead of rendering each chapter immediately upon retrieval, the function waits until all the chapter data is fetched,
-	// ensuring the complete data set is rendered at once, improving the user experience by avoiding partial rendering.
+	function gotoPreviousVerse(previousKey) {
+		goto(`?startKey=${previousKey}`, { replaceState: false });
+		__pageURL.set(Math.random());
+	}
+
 	async function fetchAllChapterData() {
 		const promises = Array.from(Array(endIndex + 1).keys())
 			.slice(startIndex)
-			.map((index) =>
-				fetchChapterData({
-					chapter: keysArray[index].split(':')[0],
-					reRenderWhenTheseUpdates: [$__fontType, $__wordTranslation, $__wordTransliteration]
-				})
-			);
+			.map(async (index) => {
+				const chapterKey = keysArray[index].split(':')[0];
+
+				if (__keysToFetchData.hasOwnProperty(chapterKey)) {
+					// Return cached data if available
+					console.log('returning cache...');
+					return __keysToFetchData[chapterKey];
+				} else {
+					// Fetch from API and store in the cache
+					const data = await fetchChapterData({ chapter: chapterKey });
+
+					// Store fetched data in the cache
+					// __keysToFetchData[chapterKey] = data;
+
+					return data;
+				}
+			});
 
 		const results = await Promise.all(promises);
 
@@ -161,6 +188,14 @@
 	});
 </script>
 
+{#if showLoadPreviousVerseButton}
+	{@const previousKey = keysArray[getIndexOfKey(keyToStartWith) - 1]}
+	<div class={loadPrevNextVerseButtons}>
+		<button class="text-sm {buttonClasses}" on:click={() => __pageURL.set(Math.random())}>Start of {term('juz')}</button>
+		<button class="text-sm {buttonClasses}" on:click={() => gotoPreviousVerse(previousKey)}>Previous {term('verse')}</button>
+	</div>
+{/if}
+
 {#if Object.keys(dataMap).length === endIndex - startIndex + 1}
 	{#each Array.from(Array(endIndex + 1).keys()).slice(startIndex) as index}
 		{@const key = keysArray[index]}
@@ -170,7 +205,8 @@
 		{#if $__currentPage === 'juz' && +key.split(':')[1] === 1}
 			{@const chapter = +key.split(':')[0]}
 			<div class="mt-4">
-				<ChapterHeader {chapter} />
+				<div class={dividerClasses}>{term('chapter')} {chapter} - {quranMetaData[chapter].transliteration}</div>
+
 				<Bismillah {chapter} startVerse={+key.split(':')[1]} />
 			</div>
 		{/if}
@@ -179,13 +215,13 @@
 		</section>
 	{/each}
 {:else}
-	<Spinner />
+	<Spinner height="screen" margin="-mt-20" />
 {/if}
 
 {#if showContinueReadingButton}
 	{#if endIndex < keysArrayLength && document.getElementById('loadVersesButton') === null}
 		<div id="loadVersesButton" class="flex justify-center pt-6 pb-18" use:inview={loadButtonOptions} on:inview_enter={(event) => document.querySelector('#loadVersesButton > button').click()}>
-			<button on:click={loadNextVerses} class="text-sm {buttonOutlineClasses}"> Continue Reading </button>
+			<button on:click={loadNextVerses} class="text-sm {buttonClasses}"> Continue Reading </button>
 		</div>
 	{/if}
 {/if}

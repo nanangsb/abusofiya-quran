@@ -12,6 +12,7 @@ export const defaultSettings = {
 		englishTerminology: false,
 		hideNonDuaPart: false,
 		wordMorphologyOnClick: false,
+		homepageExtrasPanelVisible: true,
 		fontSizes: {
 			arabicText: window.matchMedia('(min-width: 1280px)').matches || window.matchMedia('(min-width: 1024px)').matches || window.matchMedia('(min-width: 768px)').matches ? 'text-4xl' : 'text-2xl',
 			wordTranslationText: 'text-sm',
@@ -42,10 +43,7 @@ export const defaultSettings = {
 		correctAnswers: 0,
 		wrongAnswers: 0
 	},
-	lastRead: {
-		key: '1:1',
-		page: 1
-	},
+	lastRead: {},
 	userBookmarks: [],
 	userNotes: {},
 	favouriteChapters: [1, 5, 18],

@@ -18,7 +18,7 @@
 	import MorphologyModal from '$ui/Modals/MorphologyModal.svelte';
 	import CopyShareVerseModal from '$ui/Modals/CopyShareVerseModal.svelte';
 
-	import { __websiteOnline, __currentPage, __chapterNumber, __settingsDrawerHidden, __wakeLockEnabled, __userToken, __fontType, __wordTranslation, __verseTranslations, __selectedDisplayId, __mushafMinimalModeEnabled, __topNavbarVisible, __bottomToolbarVisible } from '$utils/stores';
+	import { __websiteOnline, __currentPage, __chapterNumber, __settingsDrawerHidden, __wakeLockEnabled, __userToken, __fontType, __wordTranslation, __verseTranslations, __mushafMinimalModeEnabled, __topNavbarVisible, __bottomToolbarVisible, __displayType } from '$utils/stores';
 	import { checkOldBookmarks } from '$utils/checkOldBookmarks';
 	import { debounce } from '$utils/debounce';
 	import { toggleNavbar } from '$utils/toggleNavbar';
@@ -91,16 +91,14 @@
 
 	// Update display and font type based on current page
 	$: if ($__currentPage === 'mushaf') {
-		__selectedDisplayId.set(6); // Mushaf Mode
+		$__displayType = 6;
+		// We do not need Uthmani digital and Indopak fonts in mushaf page
 		if (![2, 3].includes($__fontType)) {
-			__fontType.set(2); // Default font
+			__fontType.set(2);
 		}
 	} else {
 		const userSettings = JSON.parse(localStorage.getItem('userSettings'));
-
-		updateSettings({ type: 'displayType', value: userSettings.displaySettings.displayType });
-		__selectedDisplayId.set(userSettings.displaySettings.displayType);
-
+		updateSettings({ type: 'displayType', value: userSettings.displaySettings.displayType, skipTrackEvent: true });
 		__fontType.set(userSettings.displaySettings.fontType);
 	}
 
@@ -111,8 +109,9 @@
 
 	// Set default paddings based on current page
 	function setDefaultPaddings() {
-		paddingTop = $__currentPage === 'home' ? 'pt-16' : defaultPaddingTop;
-		paddingBottom = $__currentPage === 'chapter' ? 'pb-24' : $__currentPage === 'home' ? 'pb-20' : defaultPaddingBottom;
+		// paddingTop = $__currentPage === 'home' ? 'pt-16' : defaultPaddingTop;
+		paddingTop = $__currentPage === 'home' ? 'pt-0' : defaultPaddingTop;
+		paddingBottom = $__currentPage === 'chapter' ? 'pb-24' : defaultPaddingBottom;
 		paddingX = $__currentPage === 'mushaf' ? 'px-0 md:px-4' : $__currentPage === 'home' ? 'px-0' : 'px-4';
 	}
 
