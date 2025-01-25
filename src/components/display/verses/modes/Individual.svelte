@@ -12,7 +12,6 @@
 	import { isValidVerseKey } from '$utils/validateKey';
 	import { goto } from '$app/navigation';
 	import { inview } from 'svelte-inview';
-	import { onMount } from 'svelte';
 	import { term } from '$utils/terminologies';
 	import { selectableDisplays } from '$data/options';
 	import { quranMetaData } from '$data/quranMeta';
@@ -66,7 +65,9 @@
 			keyToStartWith = params.get('startKey');
 
 			if (isValidVerseKey(keyToStartWith)) {
-				goto(removeParam('startKey'), { replaceState: false });
+				const parsedUrl = new URL(window.location.href);
+				parsedUrl.searchParams.delete('startKey');
+				goto(parsedUrl.toString(), { replaceState: false });
 				startIndex = getIndexOfKey(keyToStartWith);
 				endIndex = keysArrayLength > maxIndexesAllowedToRender ? startIndex + maxIndexesAllowedToRender : keysArrayLength;
 
@@ -133,12 +134,6 @@
 		let index = keysArray.indexOf(key);
 		if (index === -1) index = 0;
 		return index;
-	}
-
-	function removeParam(param) {
-		const parsedUrl = new URL(window.location.href);
-		parsedUrl.searchParams.delete(param);
-		return parsedUrl.toString();
 	}
 
 	function versesRendered() {
