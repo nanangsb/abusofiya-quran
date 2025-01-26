@@ -39,11 +39,11 @@
 			goto(`/morphology/${props.key}`, { replaceState: false });
 		}
 
-		// If the user clicks on a word in a non-Morphology page
-		// else if ($__currentPage !== 'morphology' && props.type === 'word' && $__wordMorphologyOnClick) {
-		// 	__morphologyKey.set(props.key);
-		// 	__morphologyModalVisible.set(true);
-		// }
+		// If the user clicks on a word
+		else if ((!['morphology', 'mushaf'].includes($__currentPage) && props.type === 'word' && $__wordMorphologyOnClick) || $__morphologyModalVisible) {
+			__morphologyKey.set(props.key);
+			__morphologyModalVisible.set(true);
+		}
 
 		// All other options
 		else {
@@ -122,7 +122,7 @@
 			{/if}
 		</span>
 	</div>
-	{#if displayIsContinuous}
+	{#if displayIsContinuous && !$__morphologyModalVisible}
 		<VerseOptionsDropdown page={value.meta.page} />
 	{/if}
 

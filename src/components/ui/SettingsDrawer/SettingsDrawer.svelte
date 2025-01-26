@@ -469,7 +469,7 @@
 					<!-- <div class="border-b {window.theme('border')}"></div> -->
 
 					<!-- show-morphology-on-word-click-toggle -->
-					<!-- <div id="show-morphology-on-word-click" class={settingsBlockClasses}>
+					<div id="show-morphology-on-word-click" class={settingsBlockClasses}>
 						<div class="flex flex-row justify-between items-center">
 							<span class="block">Word Morphology On Click</span>
 							<label class="inline-flex items-center cursor-pointer">
@@ -477,8 +477,8 @@
 								<div class={toggleBtnClasses}></div>
 							</label>
 						</div>
-						<p class={settingsDescriptionClasses}>Enable this option to view morphology on word click, instead of playing audio.</p>
-					</div> -->
+						<p class={settingsDescriptionClasses}>Show morphology on word click, instead of playing audio.</p>
+					</div>
 				</div>
 			</div>
 
