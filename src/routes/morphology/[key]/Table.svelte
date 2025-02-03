@@ -1,14 +1,9 @@
 <script>
-	export let wordData, tableType;
+	export let wordData, tableTitle;
 
 	import { __fontType } from '$utils/stores';
 	import { buttonClasses, linkClasses } from '$data/commonClasses';
 	import { term } from '$utils/terminologies';
-
-	const tableTitles = {
-		1: { title: 'Words in Quran having same root' },
-		2: { title: 'Exact words in Quran' }
-	};
 
 	const params = new URLSearchParams(window.location.search);
 	const loadAll = params.get('load_all') === 'true';
@@ -27,7 +22,7 @@
 
 <div class="flex flex-col">
 	<div class="relative space-y-6 sm:rounded-3xl">
-		<h1 class="text-md md:text-2xl text-center">{tableTitles[tableType].title} ({totalAvailableWords})</h1>
+		<h1 class="text-md md:text-2xl text-center">{tableTitle} ({totalAvailableWords})</h1>
 		<div class="max-h-[32em] overflow-auto">
 			<table class="w-full text-sm text-left rtl:text-right rounded-md">
 				<thead class="text-xs uppercase top-0 {window.theme('bgSecondaryLight')}">

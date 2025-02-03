@@ -147,8 +147,10 @@
 		{#await fetchWordsData}
 			<Spinner />
 		{:then fetchWordsData}
+			{@const sameRootData = fetchWordsData[0].morphology.root.words_with_same_root}
+
 			{#if !Object.values(fetchWordsData[0].morphology.verbs).every((o) => o === null)}
-				{#if Object.keys(fetchWordsData[0].morphology.root.words_with_same_root).length > 0}
+				{#if Object.keys(sameRootData).length > 0}
 					<div id="word-forms" class="pb-8 pt-2 border-b-2 {window.theme('border')}">
 						<div class="flex flex-col">
 							<div id="different-verbs">
@@ -172,17 +174,16 @@
 				{/if}
 			{/if}
 
-			{@const sameRootData = fetchWordsData[0].morphology.root.words_with_same_root}
 			{#if Object.keys(sameRootData).length > 0}
 				<div id="word-root-data" class="pb-8 pt-8 border-b-2 {window.theme('border')}">
-					<Table wordData={sameRootData} tableType={1} />
+					<Table wordData={sameRootData} tableTitle="Words in Quran having same root" />
 				</div>
 			{/if}
 
 			{@const exactWordsData = fetchWordsData[0].morphology.exact_words_in_quran}
 			{#if Object.keys(exactWordsData).length > 0}
 				<div id="exact-word-data" class="pb-8 pt-8 border-b-2 {window.theme('border')}">
-					<Table wordData={exactWordsData} tableType={2} />
+					<Table wordData={exactWordsData} tableTitle="Exact words in Quran" />
 				</div>
 			{/if}
 		{:catch error}
