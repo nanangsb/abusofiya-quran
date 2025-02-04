@@ -249,7 +249,6 @@ export function updateSettings(props) {
 		case 'hideNonDuaPart':
 			__hideNonDuaPart.set(props.value);
 			userSettings.displaySettings.hideNonDuaPart = props.value;
-			trackEvent = true;
 			break;
 
 		// for quiz correct answers
