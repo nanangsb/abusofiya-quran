@@ -121,6 +121,7 @@ export const selectableThemes = {
 };
 
 export const verseTranslationsLanguages = [
+	{ language_id: 187, language: 'Albanian' },
 	{ language_id: 20, language: 'Bangla' },
 	{ language_id: 185, language: 'Chinese' },
 	{ language_id: 34, language: 'Divehi' },
@@ -132,15 +133,23 @@ export const verseTranslationsLanguages = [
 	{ language_id: 106, language: 'Malayalam' },
 	{ language_id: 43, language: 'Persian' },
 	{ language_id: 138, language: 'Russian' },
+	{ language_id: 142, language: 'Sindhi' },
 	{ language_id: 158, language: 'Tamil' },
 	{ language_id: 11115, language: 'Transliteration' },
 	{ language_id: 167, language: 'Turkish' },
 	{ language_id: 174, language: 'Urdu' }
 ];
 
-export const rightToLeftVerseTranslations = [86, 840, 156, 97, 234, 158, 151, 54, 819, 135, 29];
+export const rightToLeftVerseTranslations = [86, 840, 156, 97, 234, 158, 151, 54, 819, 135, 29, 238];
 
 export const selectableVerseTranslations = {
+	// albanian
+	88: {
+		resource_id: 88,
+		resource_name: 'Hasan Efendi Nahi',
+		language_id: 187
+	},
+
 	// bangla
 	161: {
 		resource_id: 161,
@@ -328,6 +337,14 @@ export const selectableVerseTranslations = {
 		language_id: 138
 	},
 
+	// sindhi
+	238: {
+		resource_id: 238,
+		resource_name: 'Taj Mehmood Amroti',
+		language_id: 142,
+		font: 'font-Sindhi'
+	},
+
 	// tamil
 	229: {
 		resource_id: 229,
@@ -393,68 +410,76 @@ export const selectableVerseTranslations = {
 	156: {
 		resource_id: 156,
 		resource_name: "Fe Zilal al-Qur'an",
-		language_id: 174
+		language_id: 174,
+		font: 'font-Urdu'
 	},
 	97: {
 		resource_id: 97,
 		resource_name: 'Tafheem Ul Quran - Abul Alaa Maududi',
-		language_id: 174
+		language_id: 174,
+		font: 'font-Urdu'
 	},
 	234: {
 		resource_id: 234,
 		resource_name: 'Fatah Muhammad Jalandhari',
-		language_id: 174
+		language_id: 174,
+		font: 'font-Urdu'
 	},
 	158: {
 		resource_id: 158,
 		resource_name: 'بیان القرآن (ڈاکٹر اسرار احمد)',
-		language_id: 174
+		language_id: 174,
+		font: 'font-Urdu'
 	},
 	151: {
 		resource_id: 151,
 		resource_name: 'Shaykh al-Hind Mahmud al-Hasan (with Tafsir E Usmani)',
-		language_id: 174
+		language_id: 174,
+		font: 'font-Urdu'
 	},
 	54: {
 		resource_id: 54,
 		resource_name: 'Maulana Muhammad Junagarhi',
-		language_id: 174
+		language_id: 174,
+		font: 'font-Urdu'
 	},
 	819: {
 		resource_id: 819,
 		resource_name: 'Maulana Wahiduddin Khan',
-		language_id: 174
+		language_id: 174,
+		font: 'font-Urdu'
 	},
 	831: {
 		resource_id: 831,
 		resource_name: 'Abul Alaa Maududi (Roman Urdu)',
-		language_id: 174,
-		is_roman: true
+		language_id: 174
 	}
 };
 
 export const selectableVerseTransliterations = [1, 3, 57];
 
 export const selectableWordTranslations = {
-	1: { id: 5, language: 'Bangla' },
-	2: { id: 14, language: 'Chinese (Traditional)' },
-	3: { id: 15, language: 'Chinese (Zhuyin)' },
-	4: { id: 16, language: 'Chinese (Simplified)' },
-	5: { id: 17, language: 'Chinese (Pinyin)' },
-	6: { id: 18, language: 'Divehi' },
-	7: { id: 1, language: 'English' },
-	8: { id: 11, language: 'French' },
-	9: { id: 8, language: 'German' },
-	10: { id: 3, language: 'Hindi' },
-	11: { id: 4, language: 'Indonesian' },
-	// 12: { id: 10, language: 'Ingush' },
-	13: { id: 12, language: 'Malayalam (Amani Thafseer)' },
-	14: { id: 13, language: 'Malayalam (Quran Lalithasaram)' },
-	// 15: { id: 19, language: 'Persian' },
-	// 16: { id: 9, language: 'Russian' },
-	17: { id: 7, language: 'Tamil' },
-	18: { id: 6, language: 'Turkish' },
-	19: { id: 2, language: 'Urdu' }
+	1: { id: 1, language: 'English' },
+	2: { id: 2, language: 'Urdu', font: 'font-Urdu' },
+	3: { id: 3, language: 'Hindi' },
+	4: { id: 4, language: 'Indonesian' },
+	5: { id: 5, language: 'Bangla' },
+	6: { id: 6, language: 'Turkish' },
+	7: { id: 7, language: 'Tamil' },
+	8: { id: 8, language: 'German' },
+	// 9: { id: 9, language: 'Russian' },
+	// 10: { id: 10, language: 'Ingush' },
+	11: { id: 11, language: 'French' },
+	12: { id: 12, language: 'Malayalam (Amani Thafseer)' },
+	13: { id: 13, language: 'Malayalam (Quran Lalithasaram)' },
+	14: { id: 14, language: 'Chinese (Traditional)' },
+	15: { id: 15, language: 'Chinese (Zhuyin)' },
+	16: { id: 16, language: 'Chinese (Simplified)' },
+	17: { id: 17, language: 'Chinese (Pinyin)' },
+	18: { id: 18, language: 'Divehi' },
+	// 19: { id: 19, language: 'Persian' },
+	20: { id: 20, language: 'Sindhi', font: 'font-Sindhi' },
+	21: { id: 21, language: 'Albanian' }
 };
 
 export const selectableWordTransliterations = {
