@@ -314,12 +314,14 @@ export const selectableVerseTranslations = {
 	135: {
 		resource_id: 135,
 		resource_name: 'IslamHouse.com',
-		language_id: 43
+		language_id: 43,
+		font: 'font-Urdu'
 	},
 	29: {
 		resource_id: 29,
 		resource_name: 'Hussein Taji Kal Dari',
-		language_id: 43
+		language_id: 43,
+		font: 'font-Urdu'
 	},
 
 	// russian
@@ -479,7 +481,7 @@ export const selectableWordTranslations = {
 	16: { id: 16, language: 'Chinese (Simplified)' },
 	17: { id: 17, language: 'Chinese (Pinyin)' },
 	18: { id: 18, language: 'Divehi' },
-	// 19: { id: 19, language: 'Persian' },
+	19: { id: 19, language: 'Persian', font: 'font-Urdu' },
 	20: { id: 20, language: 'Sindhi', font: 'font-Sindhi' },
 	21: { id: 21, language: 'Albanian' }
 };

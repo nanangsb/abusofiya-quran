@@ -1,3 +1,9 @@
+### Mar 1, 2025
+
+- **Re-added Persian Word-by-Word Language:** The **Persian word-by-word translation** is back after being temporarily removed in a previous update. Thank you for your patience!
+
+---
+
 ### Feb 27, 2025
 
 - **Enhanced Audio Playback:** We've brought back the much-loved feature to **repeat custom verse ranges** — perfect for memorization and focused listening.
