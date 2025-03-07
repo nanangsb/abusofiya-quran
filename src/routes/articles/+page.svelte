@@ -19,8 +19,6 @@
 			<a href={`/articles/${article.slug}`}>
 				<h2>{article.title}</h2>
 			</a>
-			<p>{article.description}</p>
-			<small>{article.date}</small>
 		</div>
 	{/each}
 </div>

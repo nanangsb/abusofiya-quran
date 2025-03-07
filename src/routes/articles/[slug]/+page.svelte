@@ -14,7 +14,7 @@
 
 		if (meta) {
 			const mdModules = import.meta.glob('../mds/*.md', { as: 'raw' });
-			const mdPath = `../mds/${meta.file}`;
+			const mdPath = `../mds/${meta.slug}.md`;
 			if (mdModules[mdPath]) {
 				content = marked.parse(await mdModules[mdPath]());
 			} else {
