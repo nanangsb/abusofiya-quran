@@ -135,7 +135,7 @@
 	.background-image {
 		background-image: url(https://static.quranwbw.com/data/v4/images/others/bg-image.svg);
 		background-position: center center;
-		background-size: cover;
+		background-size: contain;
 		background-color: rgba(0, 0, 0, 0); /* Transparent color layer */
 		background-blend-mode: multiply; /* Options: overlay, darken, etc. */
 	}
