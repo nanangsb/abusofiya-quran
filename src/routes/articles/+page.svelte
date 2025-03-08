@@ -12,13 +12,16 @@
 	});
 </script>
 
-<h1>Articles</h1>
 <div>
 	{#each articleList as article}
-		<div>
+		<div class="flex flex-col space-y-2 border-b py-4">
 			<a href={`/articles/${article.slug}`}>
-				<h2>{article.title}</h2>
+				<h2 class="text-xl">{article.title}</h2>
 			</a>
+
+			<div class="flex flex-row space-x-4 opacity-70">
+				<div class="text-xs">Posted by {article.author} on {article.date}</div>
+			</div>
 		</div>
 	{/each}
 </div>
