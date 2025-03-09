@@ -61,7 +61,7 @@
 				<a href={$__lastRead.hasOwnProperty('page') ? `/page/${$__lastRead.page}` : '/page/1'} class="{topButtonClasses} !py-4 md:bg-transparent"><BookFilled size={4} /><span class="hidden md:block">Mushaf</span></a>
 				<a href="/morphology/1:1" class="{topButtonClasses} !py-4 md:bg-transparent"><MorphologyBold size={4} /><span class="hidden md:block">Morphology</span></a>
 			</div>
-			<button class={topButtonClasses} on:click={() => __siteNavigationModalVisible.set(true)}><Menu size={4} /><span class="hidden md:block">Menu</span></button>
+			<button class="{topButtonClasses} !py-4 md:bg-transparent" on:click={() => __siteNavigationModalVisible.set(true)}><Menu size={4} /><span class="hidden md:block">Menu</span></button>
 		</div>
 	</div>
 
@@ -133,10 +133,19 @@
 
 <style>
 	.background-image {
+		position: relative;
+		z-index: 0;
+		overflow: hidden;
+	}
+
+	.background-image::before {
+		content: '';
+		position: absolute;
+		inset: 0;
 		background-image: url(https://static.quranwbw.com/data/v4/images/others/bg-image.svg);
 		background-position: center center;
-		background-size: contain;
-		background-color: rgba(0, 0, 0, 0); /* Transparent color layer */
-		background-blend-mode: multiply; /* Options: overlay, darken, etc. */
+		background-size: cover;
+		opacity: 0.5;
+		z-index: -1;
 	}
 </style>
