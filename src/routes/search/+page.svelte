@@ -12,6 +12,9 @@
 	import { term } from '$utils/terminologies';
 	import { selectableVerseTranslations } from '$data/options';
 
+	const linkClasses = `w-fit flex flex-row space-x-2 py-4 px-4 rounded-xl items-center cursor-pointer ${window.theme('hoverBorder')} ${window.theme('bgSecondaryLight')}`;
+	const linkTextClasses = 'text-xs md:text-sm text-left w-fit truncate';
+
 	const params = new URLSearchParams(window.location.search);
 	let searchQuery = params.get('query') === null || params.get('query') === '' ? '' : params.get('query'); // Search text
 	let searchPage = params.get('page') === null || params.get('page') === '' ? 1 : +params.get('page'); // Selected page
@@ -23,6 +26,7 @@
 	let fetchingNewData = false;
 	let resultsFound = false;
 	let badRequest = false;
+	let navigationResults = null;
 
 	__keysToFetch.set(null);
 
@@ -45,6 +49,7 @@
 			const { pagination } = versesKeyData;
 			totalResults = pagination.total_records;
 			pagePagination = pagination;
+			navigationResults = versesKeyData.result.navigation;
 			return generateKeys(versesKeyData);
 		} catch (error) {
 			console.error('Error fetching verse keys:', error);
@@ -92,6 +97,21 @@
 		resultsFound = keys === null || keys === '' ? false : true;
 		__keysToFetch.set(keys);
 		fetchingNewData = false;
+	}
+
+	// Function to generate the correct link based on result_type
+	function getNavigationLink(item) {
+		switch (item.result_type) {
+			case 'surah':
+			case 'ayah':
+				return `https://quranwbw.com/${item.key}`;
+			case 'page':
+				return `https://quranwbw.com/page/${item.key}`;
+			case 'juz':
+				return `https://quranwbw.com/juz/${item.key}`;
+			default:
+				return '#'; // Fallback link
+		}
 	}
 
 	// Make a random hit to the search endpoint to warm it
@@ -145,10 +165,20 @@
 								"{searchQuery}".
 							{/if}
 						{/key}
-					{:else}
+					{:else if !resultsFound && navigationResults.length === 0}
 						<div class="flex text-center items-center justify-center pt-18 text-xs max-w-2xl mx-auto">Unfortunately, your query did not yield any results. Please try using a different keyword.</div>
 					{/if}
 				</div>
+
+				{#if typeof navigationResults !== 'undefined' && navigationResults.length > 0}
+					<div id="navigation-results" class="flex flex-row space-x-4 justify-center mt-6">
+						{#each navigationResults as item}
+							<a href={getNavigationLink(item)} class={linkClasses}>
+								<span class={linkTextClasses}>{item.result_type} {item.key}</span>
+							</a>
+						{/each}
+					</div>
+				{/if}
 
 				<div id="individual-verses-block">
 					{#key $__keysToFetch}
