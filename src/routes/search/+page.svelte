@@ -13,7 +13,7 @@
 	import { selectableVerseTranslations } from '$data/options';
 
 	const linkClasses = `w-fit flex flex-row space-x-2 py-4 px-4 rounded-xl items-center cursor-pointer ${window.theme('hoverBorder')} ${window.theme('bgSecondaryLight')}`;
-	const linkTextClasses = 'text-xs md:text-sm text-left w-fit truncate';
+	const linkTextClasses = 'text-xs md:text-sm text-left w-fit capitalize truncate';
 
 	const params = new URLSearchParams(window.location.search);
 	let searchQuery = params.get('query') === null || params.get('query') === '' ? '' : params.get('query'); // Search text
@@ -104,6 +104,7 @@
 		switch (item.result_type) {
 			case 'surah':
 			case 'ayah':
+			case 'range':
 				return `https://quranwbw.com/${item.key}`;
 			case 'page':
 				return `https://quranwbw.com/page/${item.key}`;
