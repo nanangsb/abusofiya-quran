@@ -376,6 +376,11 @@ export const selectableVerseTranslations = {
 		resource_name: 'Transliteration (Tajweed)',
 		language_id: 11115
 	},
+	2: {
+		resource_id: 2,
+		resource_name: 'Transliteration (Normal)',
+		language_id: 11115
+	},
 	3: {
 		resource_id: 3,
 		resource_name: 'Transliteration (Syllables)',
@@ -464,7 +469,7 @@ export const selectableVerseTranslations = {
 	}
 };
 
-export const selectableVerseTransliterations = [1, 3, 57];
+export const selectableVerseTransliterations = [1, 2, 3];
 
 export const selectableWordTranslations = {
 	1: { id: 1, language: 'English' },

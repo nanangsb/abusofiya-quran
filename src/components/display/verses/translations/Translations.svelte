@@ -5,6 +5,7 @@
 	import Skeleton from '$ui/FlowbiteSvelte/skeleton/Skeleton.svelte';
 	import { __currentPage, __verseKey, __verseTranslations, __verseTranslationData, __chapterData, __userSettings, __wordTranslation, __wordTransliteration, __keysToFetch, __keysToFetchData } from '$utils/stores';
 	import { fetchChapterData, fetchVerseTranslationData } from '$utils/fetchData';
+	import { selectableVerseTransliterations } from '$data/options';
 
 	let verseTranslationData, verseTransliterationData;
 
@@ -30,7 +31,7 @@
 	// Then, it maps the remaining IDs to their corresponding translation objects from translationsObject, returning a sorted array of these translation objects in the specified order.
 	// This ensures that the translations are displayed in the desired sequence
 	function getSortedTranslations(translationsObject, translationsSelected) {
-		const filteredSelections = translationsSelected.filter((id) => id !== 1 && id !== 3);
+		const filteredSelections = translationsSelected.filter((id) => !selectableVerseTransliterations.includes(id));
 		return filteredSelections.map((id) => translationsObject.find((translation) => translation.resource_id === id));
 	}
 </script>
@@ -40,16 +41,13 @@
 		<!-- for chapter page, we fetch the translation for the whole chapter in one go -->
 		{#if $__currentPage === 'chapter'}
 			{#if $__verseTranslationData}
-				<!-- tajweed/syllables transliteration -->
-				{#if $__verseTranslations.includes(1)}
-					<Layout verseTranslationID={1} verseTranslation={chapterData[`${value.meta.chapter}:${value.meta.verse}`].translations[0]} {value} />
+				{#if chapterData[`${value.meta.chapter}:${value.meta.verse}`]?.translations}
+					{#each chapterData[`${value.meta.chapter}:${value.meta.verse}`].translations as translation}
+						{#if $__verseTranslations.includes(translation.id) && selectableVerseTransliterations.includes(translation.id)}
+							<Layout verseTranslationID={translation.id} verseTranslation={translation} {value} />
+						{/if}
+					{/each}
 				{/if}
-
-				<!-- tajweed/syllables transliteration -->
-				{#if $__verseTranslations.includes(3)}
-					<Layout verseTranslationID={3} verseTranslation={chapterData[`${value.meta.chapter}:${value.meta.verse}`].translations[1]} {value} />
-				{/if}
-				<!-- ================== -->
 
 				<!-- data from Quran.com's API -->
 				<!-- after transliteration, show other translations -->
@@ -70,12 +68,12 @@
 				<Skeleton size="xxl" class="mb-2.5" />
 			{:then verseTransliterationData}
 				{#if verseTransliterationData}
-					{#if $__verseTranslations.includes(1)}
-						<Layout verseTranslationID={1} verseTranslation={verseTransliterationData[`${value.meta.chapter}:${value.meta.verse}`].translations[0]} {value} />
-					{/if}
-
-					{#if $__verseTranslations.includes(3)}
-						<Layout verseTranslationID={3} verseTranslation={verseTransliterationData[`${value.meta.chapter}:${value.meta.verse}`].translations[1]} {value} />
+					{#if verseTransliterationData[`${value.meta.chapter}:${value.meta.verse}`]?.translations}
+						{#each verseTransliterationData[`${value.meta.chapter}:${value.meta.verse}`].translations as translation}
+							{#if $__verseTranslations.includes(translation.id) && selectableVerseTransliterations.includes(translation.id)}
+								<Layout verseTranslationID={translation.id} verseTranslation={translation} {value} />
+							{/if}
+						{/each}
 					{/if}
 				{/if}
 			{:catch error}
