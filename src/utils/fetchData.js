@@ -10,6 +10,11 @@ export async function fetchChapterData(props) {
 	const fontType = props.fontType || get(__fontType);
 	const wordTranslation = props.wordTranslation || get(__wordTranslation);
 	const wordTransliteration = props.wordTransliteration || get(__wordTransliteration);
+	const verseTranslations =
+		props.verseTranslations ||
+		get(__verseTranslations)
+			.filter((id) => [1, 2, 3].includes(id)) // Only include 1, 2, and 3
+			.toString();
 
 	// // Generate a unique key for the data
 	// const cacheKey = `${props.chapter}--${selectableFontTypes[fontType].apiId}--${wordTranslation}--${wordTransliteration}`;
@@ -29,7 +34,7 @@ export async function fetchChapterData(props) {
 			word_type: selectableFontTypes[fontType].apiId,
 			word_translation: wordTranslation,
 			word_transliteration: wordTransliteration,
-			verse_translation: '1,2,3',
+			verse_translation: verseTranslations,
 			version: apiVersion,
 			bypass_cache: apiByPassCache
 		});
