@@ -10,7 +10,6 @@
 	import { apiEndpoint } from '$data/websiteSettings';
 	import { buttonOutlineClasses } from '$data/commonClasses';
 	import { term } from '$utils/terminologies';
-	import { selectableVerseTranslations } from '$data/options';
 
 	const linkClasses = `w-fit flex flex-row space-x-2 py-4 px-4 rounded-xl items-center cursor-pointer ${window.theme('hoverBorder')} ${window.theme('bgSecondaryLight')}`;
 	const linkTextClasses = 'text-xs md:text-sm text-left w-fit capitalize truncate';
@@ -124,15 +123,11 @@
 <PageHead title={'Search'} />
 
 <div class="mt-4 space-y-4">
-	<div class="flex max-w-2xl mx-auto">
-		<button class="py-3 pl-6 pr-4 rounded-l-3xl items-center border {window.theme('border')} {window.theme('bgSecondaryLight')}" title="Translations" on:click={() => __settingsSelectorModal.set({ component: VerseTranslationSelector, visible: true, title: `${term('verse')} Translation` })}>
-			<Translation size={5} />
-		</button>
-
+	<div class="flex max-w-xl mx-auto">
 		<!-- search input form -->
 		<form on:submit|preventDefault={() => updateSearchQuery(document.getElementById('search-input').value)} class="flex items-center w-full">
 			<div class="relative w-full">
-				<input type="search" id="search-input" value={searchQuery} class="bg-transparent block py-4 pl-4 w-full z-20 text-sm border {window.theme('placeholder')} {window.theme('border')} {window.theme('input')}" placeholder="Search Ibrahim, Mary, Jannat, كتاب..." required />
+				<input type="search" id="search-input" value={searchQuery} class="bg-transparent block py-4 pl-4 rounded-l-3xl w-full z-20 text-sm border {window.theme('placeholder')} {window.theme('border')} {window.theme('input')}" placeholder="Search Ibrahim, Mary, Jannat, كتاب..." required />
 			</div>
 			<button type="submit" title="Search" class="py-4 px-5 rounded-r-3xl items-center border {window.theme('border')} {window.theme('bgSecondaryLight')}">
 				<Search2 size={5} />
@@ -143,7 +138,7 @@
 	<!-- search instructions -->
 	{#if searchQuery.length === 0}
 		<div id="how-to-search" class="flex flex-col text-center text-xs space-y-2 max-w-2xl mx-auto">
-			<span>Explore {Object.keys(selectableVerseTranslations).length} translations from diverse languages and authors. Search for any text, regardless of English or Arabic terminology, and find the nearest or related results. Additionally, you can display specific translations using the button on the left. </span>
+			<span>Search for any text, regardless of English or Arabic terminology, and find the nearest or related results. </span>
 		</div>
 	{/if}
 
@@ -175,7 +170,11 @@
 					<div id="navigation-results" class="flex flex-row space-x-4 justify-center mt-6">
 						{#each navigationResults as item}
 							<a href={getNavigationLink(item)} class={linkClasses}>
-								<span class={linkTextClasses}>{item.result_type} {item.key}</span>
+								{#if item.result_type === 'range'}
+									<span class={linkTextClasses}>{item.key}</span>
+								{:else}
+									<span class={linkTextClasses}>{item.result_type} {item.key}</span>
+								{/if}
 							</a>
 						{/each}
 					</div>
