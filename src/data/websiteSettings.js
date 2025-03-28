@@ -1,6 +1,6 @@
-export const websiteURL = 'QuranWBW.com';
+export const websiteURL = 'Quran.AbuSofiya.com';
 
-export const websiteTagline = 'Word By Word Translation, Transliteration And Morphology';
+export const websiteTagline = 'Terjemahan Kata Demi Kata, Transliterasi Dan Morfologi';
 
 export const websiteTitle = `Quran ${websiteTagline} - ${websiteURL}`;
 
@@ -24,6 +24,6 @@ export const mushafWordFontLink = `${staticEndpoint}/fonts/Hafs/KFGQPC-v4/COLRv1
 
 export const mushafHeaderFontLink = `${staticEndpoint}/fonts/Extras/chapter-headers/QCF_SurahHeader_COLOR-Regular.woff2`;
 
-export const errorLoadingDataMessage = 'Sorry, there was an error while loading the data. Please refresh the page and try again.';
+export const errorLoadingDataMessage = 'Maaf, terjadi kesalahan saat memuat data. Harap segarkan halaman dan coba lagi.';
 
 export const splitDelimiter = '||';
