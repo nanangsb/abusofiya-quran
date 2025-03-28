@@ -4,7 +4,7 @@ export const websiteTagline = 'Word By Word Translation, Transliteration And Mor
 
 export const websiteTitle = `Quran ${websiteTagline} - ${websiteURL}`;
 
-export const wbwLanguages = 'English, Urdu, Hindi, Indonesian, Bangla, Turkish, Tamil, French, German, Chinese, Malayalam, Divehi, Sindhi, Persian and Albanian';
+export const wbwLanguages = 'Indonesian, English, Urdu, Hindi, Bangla, Turkish, Tamil, French, German, Chinese, Malayalam, Divehi, Sindhi, Persian and Albanian';
 
 export const apiVersion = 137;
 
