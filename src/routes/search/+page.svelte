@@ -10,7 +10,10 @@
 	import { apiEndpoint } from '$data/websiteSettings';
 	import { buttonOutlineClasses } from '$data/commonClasses';
 	import { term } from '$utils/terminologies';
-	import { selectableVerseTranslations } from '$data/options';
+	import { quranMetaData } from '$data/quranMeta';
+
+	const linkClasses = `w-fit flex flex-row space-x-2 py-4 px-4 rounded-xl items-center cursor-pointer ${window.theme('hoverBorder')} ${window.theme('bgSecondaryLight')}`;
+	const linkTextClasses = 'text-xs md:text-sm text-left w-fit capitalize truncate';
 
 	const params = new URLSearchParams(window.location.search);
 	let searchQuery = params.get('query') === null || params.get('query') === '' ? '' : params.get('query'); // Search text
@@ -23,6 +26,7 @@
 	let fetchingNewData = false;
 	let resultsFound = false;
 	let badRequest = false;
+	let navigationResults = null;
 
 	__keysToFetch.set(null);
 
@@ -45,6 +49,7 @@
 			const { pagination } = versesKeyData;
 			totalResults = pagination.total_records;
 			pagePagination = pagination;
+			navigationResults = versesKeyData.result.navigation;
 			return generateKeys(versesKeyData);
 		} catch (error) {
 			console.error('Error fetching verse keys:', error);
@@ -94,6 +99,20 @@
 		fetchingNewData = false;
 	}
 
+	// Function to generate the correct link based on result_type
+	function getNavigationLink(item) {
+		const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+		const linkMap = {
+			surah: [`${term('chapter')} ${quranMetaData[item.key]?.transliteration} (${item.key})`, `${baseUrl}/${item.key}`],
+			ayah: [`Verse ${item.key}`, `${baseUrl}/${item.key}`],
+			range: [`${item.key}`, `${baseUrl}/${item.key}`],
+			page: [`Page ${item.key}`, `${baseUrl}/page/${item.key}`],
+			juz: [`Juz ${item.key}`, `${baseUrl}/juz/${item.key}`]
+		};
+
+		return linkMap[item.result_type] || ['#', '#']; // Fallback to '#' if no match
+	}
+
 	// Make a random hit to the search endpoint to warm it
 	fetch(`${apiEndpoint}/search/translations?query=mary&random_id=${Math.floor(10000 + Math.random() * 90000)}&bypass_cache=true`);
 
@@ -103,15 +122,11 @@
 <PageHead title={'Search'} />
 
 <div class="mt-4 space-y-4">
-	<div class="flex max-w-2xl mx-auto">
-		<button class="py-3 pl-6 pr-4 rounded-l-3xl items-center border {window.theme('border')} {window.theme('bgSecondaryLight')}" title="Translations" on:click={() => __settingsSelectorModal.set({ component: VerseTranslationSelector, visible: true, title: `${term('verse')} Translation` })}>
-			<Translation size={5} />
-		</button>
-
+	<div class="flex max-w-xl mx-auto">
 		<!-- search input form -->
 		<form on:submit|preventDefault={() => updateSearchQuery(document.getElementById('search-input').value)} class="flex items-center w-full">
 			<div class="relative w-full">
-				<input type="search" id="search-input" value={searchQuery} class="bg-transparent block py-4 pl-4 w-full z-20 text-sm border {window.theme('placeholder')} {window.theme('border')} {window.theme('input')}" placeholder="Search Ibrahim, Mary, Jannat, كتاب..." required />
+				<input type="search" id="search-input" value={searchQuery} class="bg-transparent block py-4 pl-4 rounded-l-3xl w-full z-20 text-sm border {window.theme('placeholder')} {window.theme('border')} {window.theme('input')}" placeholder="Search Ibrahim, Mary, Jannat, كتاب..." required />
 			</div>
 			<button type="submit" title="Search" class="py-4 px-5 rounded-r-3xl items-center border {window.theme('border')} {window.theme('bgSecondaryLight')}">
 				<Search2 size={5} />
@@ -122,7 +137,7 @@
 	<!-- search instructions -->
 	{#if searchQuery.length === 0}
 		<div id="how-to-search" class="flex flex-col text-center text-xs space-y-2 max-w-2xl mx-auto">
-			<span>Explore {Object.keys(selectableVerseTranslations).length} translations from diverse languages and authors. Search for any text, regardless of English or Arabic terminology, and find the nearest or related results. Additionally, you can display specific translations using the button on the left. </span>
+			<span>Search for any text, regardless of English or Arabic terminology, and find the nearest or related results. </span>
 		</div>
 	{/if}
 
@@ -145,10 +160,21 @@
 								"{searchQuery}".
 							{/if}
 						{/key}
-					{:else}
+					{:else if !resultsFound && navigationResults.length === 0}
 						<div class="flex text-center items-center justify-center pt-18 text-xs max-w-2xl mx-auto">Unfortunately, your query did not yield any results. Please try using a different keyword.</div>
 					{/if}
 				</div>
+
+				{#if typeof navigationResults !== 'undefined' && navigationResults.length > 0}
+					<div id="navigation-results" class="flex flex-wrap space-x-4 justify-center mt-6">
+						{#each navigationResults as item}
+							{@const [itemTitle, itemLink] = getNavigationLink(item)}
+							<a href={itemLink} target="_blank" class="{linkClasses} my-1">
+								<span class={linkTextClasses}>{itemTitle} {@html '&#8599;'}</span>
+							</a>
+						{/each}
+					</div>
+				{/if}
 
 				<div id="individual-verses-block">
 					{#key $__keysToFetch}
